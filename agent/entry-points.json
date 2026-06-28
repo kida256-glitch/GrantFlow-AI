@@ -1,0 +1,45 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "$id": "entry-points.json",
+  "entryPoints": [{
+    "filePath": "/content/agent.json",
+    "uniqueId": "4e593910-c527-4e6e-b7b4-57d586f3da0b",
+    "type": "agent",
+    "input": {
+      "type": "object",
+      "properties": {
+        "applicantName": {"type":"string"},
+        "email": {"type":"string"},
+        "phoneNumber": {"type":"string"},
+        "country": {"type":"string"},
+        "university": {"type":"string"},
+        "degreeProgram": {"type":"string"},
+        "gpa": {"type":"string"},
+        "personalStatement": {"type":"string"},
+        "scholarshipName": {"type":"string"},
+        "scholarshipCriteria": {"type":"string"},
+        "academicTranscript": {"$ref":"#/definitions/job-attachment"},
+        "nationalId": {"$ref":"#/definitions/job-attachment"},
+        "cv": {"$ref":"#/definitions/job-attachment"},
+        "recommendationLetter": {"$ref":"#/definitions/job-attachment"}
+      },
+      "required": ["applicantName","email","country","university","degreeProgram","gpa","personalStatement","scholarshipName","scholarshipCriteria"],
+      "definitions": {
+        "job-attachment": {"type":"object","properties":{"ID":{"type":"string"},"FullName":{"type":"string"},"MimeType":{"type":"string"},"Metadata":{"type":"object","additionalProperties":{"type":"string"}}},"required":["ID"],"x-uipath-resource-kind":"JobAttachment"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "applicationId":{"type":"string"},"eligibilityStatus":{"type":"string"},
+        "eligibilityReason":{"type":"string"},"academicScore":{"type":"number"},
+        "leadershipScore":{"type":"number"},"communityImpactScore":{"type":"number"},
+        "essayQualityScore":{"type":"number"},"overallScore":{"type":"number"},
+        "fraudRiskLevel":{"type":"string"},"fraudRiskReason":{"type":"string"},
+        "matchedScholarships":{"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"match_percentage":{"type":"number"},"match_reason":{"type":"string"}}}},
+        "reviewerSummary":{"type":"string"},"recommendedDecision":{"type":"string"},
+        "notificationMessage":{"type":"string"}
+      }
+    }
+  }]
+}

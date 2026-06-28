@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "applicants": [
+    {
+      "id": "DEMO-001",
+      "scenario": "APPROVE — Strong STEM applicant",
+      "input": {
+        "applicantName": "Amara Osei",
+        "email": "amara.osei@university.edu",
+        "country": "Ghana",
+        "university": "University of Ghana",
+        "degreeProgram": "Computer Science",
+        "gpa": "3.8/4.0",
+        "scholarshipName": "STEM Excellence Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\"]}",
+        "personalStatement": "Growing up in Accra, I taught myself Python at 14 and built a mobile app helping 200 local market traders. I founded Code4Africa, training 180 students in programming. My AI research was presented at the African AI Symposium 2026."
+      }
+    },
+    {
+      "id": "DEMO-002",
+      "scenario": "SCHOLARSHIP MATCH — Below GPA cutoff, strong alternatives",
+      "input": {
+        "applicantName": "Priya Sharma",
+        "email": "priya.sharma@iit.ac.in",
+        "country": "India",
+        "university": "IIT Bombay",
+        "degreeProgram": "Mechanical Engineering",
+        "gpa": "3.2/4.0",
+        "scholarshipName": "Research Innovation Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.7, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Any\"], \"level\": [\"graduate\"]}",
+        "personalStatement": "As the first woman from my village to attend university, I lead the Women in Engineering chapter at IIT Bombay with 120 members. My capstone project designed a low-cost water purification system now deployed in three rural villages."
+      }
+    },
+    {
+      "id": "DEMO-003",
+      "scenario": "HIGH FRAUD — Impossible GPA + AI-generated essay",
+      "input": {
+        "applicantName": "John Smith",
+        "email": "johnsmith99@gmail.com",
+        "country": "United States",
+        "university": "State University",
+        "degreeProgram": "Business Administration",
+        "gpa": "4.8/4.0",
+        "scholarshipName": "Community Leaders Fund",
+        "scholarshipCriteria": "{\"minGpa\": 3.0, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Any\"]}",
+        "personalStatement": "I am a highly motivated student with excellent leadership skills and strong academic performance. I have participated in many extracurricular activities and community service projects. I believe in the importance of education and I am committed to making a positive difference in the world."
+      }
+    }
+  ]
+}

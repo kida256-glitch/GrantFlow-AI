@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "templates": {
+    "approved": {
+      "subject": "Congratulations! GrantFlow AI — {{scholarshipName}} Award Decision",
+      "body": "Dear {{applicantName}},\n\nCONGRATULATIONS — you have been selected to receive the {{scholarshipName}}!\n\nAward: {{awardAmount}} | Application ID: {{applicationId}}\n\nNext Steps:\n1. Reply to accept your offer\n2. Submit enrollment verification\n3. Provide bank details via {{onboardingLink}}\n\nWith congratulations,\nGrantFlow AI Review Team"
+    },
+    "rejected_with_matches": {
+      "subject": "GrantFlow AI — Your {{scholarshipName}} Application + New Opportunities",
+      "body": "Dear {{applicantName}},\n\nWe are unable to offer you the {{scholarshipName}} at this time. {{rejectionReason}}\n\nHowever, we found scholarships that may be a strong fit:\n\n{{matchedScholarshipsList}}\n\nWith encouragement,\nGrantFlow AI Review Team"
+    },
+    "request_more_info": {
+      "subject": "GrantFlow AI — Additional Information Needed",
+      "body": "Dear {{applicantName}},\n\nTo complete your evaluation for {{scholarshipName}}, we need:\n\n{{additionalInfoList}}\n\nDeadline: {{responseDeadline}}\n\nKind regards,\nGrantFlow AI Review Team"
+    },
+    "missing_documents": {
+      "subject": "GrantFlow AI — Action Required: Missing Documents",
+      "body": "Dear {{applicantName}},\n\nThe following documents are missing from your application {{applicationId}}:\n\n{{missingDocumentsList}}\n\nPlease submit within 14 days.\n\nGrantFlow AI Review Team"
+    }
+  }
+}

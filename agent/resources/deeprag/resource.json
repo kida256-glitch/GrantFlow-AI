@@ -1,0 +1,33 @@
+{
+  "$resourceType": "tool",
+  "referenceKey": null,
+  "name": "DeepRAG/",
+  "type": "internal",
+  "description": "Get comprehensive synthesis across up to 1,000 pages with citations.",
+  "isEnabled": true,
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "attachment": {"$ref":"#/definitions/job-attachment","title":"Source","description":"File or document to analyze"}
+    },
+    "required": ["attachment"],
+    "definitions": {
+      "job-attachment": {"type":"object","properties":{"ID":{"type":"string"},"FullName":{"type":"string"},"MimeType":{"type":"string"},"Metadata":{"type":"object","additionalProperties":{"type":"string"}}},"required":["ID"],"x-uipath-resource-kind":"JobAttachment"}
+    }
+  },
+  "outputSchema": {"type":"array","items":{"type":"object","properties":{"content":{"type":"string"}}},"properties":{}},
+  "settings": {},
+  "guardrail": {"policies": []},
+  "argumentProperties": {},
+  "properties": {
+    "toolType": "deep-rag",
+    "settings": {
+      "contextType": "attachments",
+      "query": {"variant":"static","value":"Extract the student's full name, university, degree program, GPA, graduation year, and any academic honors. Flag any anomalies."},
+      "folderPathPrefix": {"variant":"static"},
+      "citationMode": {"value":"Inline"},
+      "fileExtension": {"value":"pdf"}
+    }
+  },
+  "id": "fdd89b5b-f130-4db6-ab13-40d5c31531f6"
+}

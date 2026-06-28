@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "scholarships": [
+    {"id":"SCH-001","name":"STEM Excellence Award","provider":"Global STEM Foundation","award":15000,"criteria":{"minGpa":3.5,"eligibleCountries":["Any"],"eligibleDegrees":["Computer Science","Engineering","Mathematics","Physics","Biology","Chemistry","Data Science","Artificial Intelligence"],"level":["undergraduate","graduate"]}},
+    {"id":"SCH-002","name":"Community Leaders Fund","provider":"International Development Alliance","award":10000,"criteria":{"minGpa":3.0,"eligibleCountries":["Nigeria","Kenya","Ghana","Tanzania","Uganda","Ethiopia","Rwanda","Senegal","Bangladesh","India","Pakistan","Nepal","Cambodia","Vietnam","Philippines","Mexico","Bolivia","Peru","Ecuador","Guatemala"],"eligibleDegrees":["Any"],"communityServiceRequired":true}},
+    {"id":"SCH-003","name":"Global Diversity Scholarship","provider":"Unity Education Trust","award":8000,"criteria":{"minGpa":2.5,"eligibleCountries":["Any"],"eligibleDegrees":["Any"],"level":["undergraduate"]}},
+    {"id":"SCH-004","name":"First Generation Scholar Grant","provider":"Pathfinders Foundation","award":12000,"criteria":{"minGpa":2.8,"eligibleCountries":["Any"],"eligibleDegrees":["Any"],"firstGenerationStudent":true}},
+    {"id":"SCH-005","name":"Research Innovation Award","provider":"Global Research Council","award":20000,"criteria":{"minGpa":3.7,"eligibleCountries":["Any"],"eligibleDegrees":["Any"],"level":["graduate"],"researchExperienceRequired":true}},
+    {"id":"SCH-006","name":"Women in Technology Grant","provider":"Tech Equity Initiative","award":10000,"criteria":{"minGpa":3.2,"eligibleCountries":["Any"],"eligibleDegrees":["Computer Science","Engineering","Data Science","Cybersecurity","Artificial Intelligence","Information Technology"],"gender":"female"}},
+    {"id":"SCH-007","name":"Emerging Leaders Scholarship","provider":"Youth Leadership Alliance","award":7500,"criteria":{"minGpa":3.0,"eligibleCountries":["Any"],"eligibleDegrees":["Any"],"ageRange":{"min":18,"max":25},"leadershipRequired":true}},
+    {"id":"SCH-008","name":"Global Health Innovation Fellowship","provider":"World Health Education Fund","award":18000,"criteria":{"minGpa":3.4,"eligibleCountries":["Any"],"eligibleDegrees":["Medicine","Public Health","Nursing","Pharmacy","Biomedical Sciences","Global Health"],"level":["graduate"]}},
+    {"id":"SCH-009","name":"Clean Energy Scholarship","provider":"Green Future Foundation","award":14000,"criteria":{"minGpa":3.3,"eligibleCountries":["Any"],"eligibleDegrees":["Environmental Science","Chemical Engineering","Electrical Engineering","Renewable Energy","Sustainability"]}},
+    {"id":"SCH-010","name":"Business Innovation Grant","provider":"Entrepreneurship Council","award":9000,"criteria":{"minGpa":3.1,"eligibleCountries":["Any"],"eligibleDegrees":["Business Administration","Economics","Finance","Marketing","Entrepreneurship","Management"]}}
+  ]
+}

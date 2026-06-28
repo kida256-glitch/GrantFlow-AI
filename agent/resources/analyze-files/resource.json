@@ -1,0 +1,25 @@
+{
+  "$resourceType": "tool",
+  "referenceKey": null,
+  "name": "Analyze Files/",
+  "type": "internal",
+  "description": "Analyze one or more files with an LLM to extract, synthesize, or answer queries about their content.",
+  "isEnabled": true,
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "attachments": {"type":"array","items":{"$ref":"#/definitions/job-attachment"},"description":"Files to process"},
+      "analysisTask": {"type":"string","description":"Task or instruction for processing the files"}
+    },
+    "required": ["attachments","analysisTask"],
+    "definitions": {
+      "job-attachment": {"type":"object","properties":{"ID":{"type":"string"},"FullName":{"type":"string"},"MimeType":{"type":"string"},"Metadata":{"type":"object","additionalProperties":{"type":"string"}}},"required":["ID"],"x-uipath-resource-kind":"JobAttachment"}
+    }
+  },
+  "outputSchema": {"type":"object","properties":{"analysis":{"type":"string"}},"required":["analysis"]},
+  "settings": {},
+  "guardrail": {"policies": []},
+  "argumentProperties": {},
+  "properties": {"toolType": "analyze-attachments"},
+  "id": "11e9f1d8-59b6-4269-84e3-afd06b8c51c3"
+}
