@@ -73,6 +73,8 @@ cd GrantFlow-AI
 
 All runnable agent files are under **`Solution/`**. Demo data is in **`Solution/Agent/sample_applicants.json`**.
 
+> **Important:** The `Solution/` folder is the agent **source project** — it does not run on its own from your local machine. You must **import it into Studio Web** on [cloud.uipath.com](https://cloud.uipath.com) and run it there. No local Python, Node.js, or CLI is required for judging.
+
 ### Step 2 — Import the solution into Studio Web
 
 1. Log in to [cloud.uipath.com](https://cloud.uipath.com)
@@ -124,33 +126,39 @@ Output mapping reference:
 
 ## How to Run the Agent
 
-Use this process every time you evaluate an application.
+**GrantFlow AI runs in UiPath Automation Cloud — not from local files.**
 
-### 1. Open the agent
+The agent executes inside **Studio Web → Agent Builder** on your UiPath tenant. The files in `Solution/` are imported into the cloud; clicking **Run** in Studio Web is how judges evaluate applications. Typical runtime is **30–60 seconds** per application.
 
-1. Go to **Studio Web** → open the **GrantFlow AI** solution → **Agent** project
-2. Confirm **Analyze Files** and **DeepRAG** appear on the canvas
-3. Click **Run** (test panel) for a quick test, or **Publish** first for Orchestrator/Maestro runs
+### Where it runs
 
-### 2. Provide application input
+| Environment | Use case |
+|-------------|----------|
+| **Studio Web → Run panel** | Primary method for hackathon judging and demos (text-only input) |
+| **Orchestrator** | Document attachments (`JobAttachment` PDFs) and production/Maestro triggers |
+| **Local filesystem** | ❌ Does **not** execute the agent — import `Solution/` into Studio Web first |
 
-Paste a JSON object with the **9 required fields**. Optional fields: `phoneNumber` and four document attachments.
+### Step-by-step — Run in Studio Web (judging procedure)
 
-**Required fields:**
+Follow this exact sequence every time you test or demo the agent:
 
-| Field | Example |
-|-------|---------|
-| `applicantName` | `"Amara Osei"` |
-| `email` | `"amara.osei@ug.edu.gh"` |
-| `country` | `"Ghana"` |
-| `university` | `"University of Ghana"` |
-| `degreeProgram` | `"Computer Science"` |
-| `gpa` | `"3.8/4.0"` |
-| `personalStatement` | Essay text |
-| `scholarshipName` | `"STEM Excellence Award"` |
-| `scholarshipCriteria` | JSON string, e.g. `"{\"minGpa\": 3.5, ...}"` |
+**Step A — Open the agent**
 
-**Quick test — copy DEMO-001** from `Solution/Agent/sample_applicants.json`:
+1. Log in to [cloud.uipath.com](https://cloud.uipath.com)
+2. Open **Studio Web**
+3. Navigate to your imported **GrantFlow AI** solution → **Agent** project  
+   (or go directly to **`/solution/Agent`** if already deployed on your tenant)
+4. Confirm **Analyze Files** and **DeepRAG** are visible on the Agent Builder canvas
+5. If tools are missing, add them via **+ Add Tool** → **Save** (see Setup Step 3 above)
+
+**Step B — Open the Run panel**
+
+1. Click **Run** in Agent Builder (top toolbar or test panel)
+2. A JSON input editor opens — this is where you paste application data
+
+**Step C — Paste test input**
+
+Copy the `input` object from `Solution/Agent/sample_applicants.json` (start with **DEMO-001**), or paste this:
 
 ```json
 {
@@ -163,20 +171,23 @@ Paste a JSON object with the **9 required fields**. Optional fields: `phoneNumbe
   "gpa": "3.8/4.0",
   "scholarshipName": "STEM Excellence Award",
   "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\", \"Engineering\", \"Mathematics\", \"Data Science\"], \"level\": [\"undergraduate\", \"graduate\"]}",
-  "personalStatement": "Growing up in Accra, I witnessed firsthand how technology could transform communities..."
+  "personalStatement": "Growing up in Accra, I witnessed firsthand how technology could transform communities — or leave them behind. At 14, I taught myself Python by borrowing my neighbor's laptop. By 16, I had built a mobile app that helped 200 local traders track inventory. That experience ignited a passion that has driven every academic and professional decision since. At the University of Ghana, I maintain a 3.8 GPA while leading our 45-member Computer Science Society, organizing three national hackathons that attracted over 600 participants. I also founded Code4Africa, a volunteer program that has trained 180 high school students in basic programming across three regions. My research on low-bandwidth AI models for rural connectivity was presented at the African AI Symposium 2025. The STEM Excellence Award would enable me to pursue my master's research in edge computing for healthcare delivery in remote communities."
 }
 ```
 
-### 3. Execute the agent
+**Required fields (9):** `applicantName`, `email`, `country`, `university`, `degreeProgram`, `gpa`, `personalStatement`, `scholarshipName`, `scholarshipCriteria`  
+**Optional:** `phoneNumber`, `academicTranscript`, `nationalId`, `cv`, `recommendationLetter`
 
-1. Click **Run** in Agent Builder (Studio Web test panel)
-2. The agent autonomously runs all **7 pipeline stages** (up to 25 iterations)
-3. If documents are attached, the agent calls **Analyze Files** and **DeepRAG** in Stage 1; if not, Stage 1 is skipped and evaluation continues from Stage 2
-4. Wait for the run to complete — typical runtime is under 60 seconds
+**Step D — Execute**
 
-### 4. Review the output
+1. Click **Run** / **Start** in the test panel
+2. The agent autonomously executes all **7 pipeline stages** (up to 25 LLM iterations)
+3. With no documents attached, **Stage 1 is skipped** and evaluation starts at Stage 2 (eligibility)
+4. Wait for the run to finish — progress appears in the Studio Web run panel (~30–60 seconds)
 
-The agent returns **14 output fields**. Confirm all are populated:
+**Step E — Review output in Studio Web**
+
+When the run completes, Studio Web displays **14 output fields**. Verify all are populated:
 
 | Field | DEMO-001 expected value |
 |-------|-------------------------|
@@ -190,16 +201,16 @@ The agent returns **14 output fields**. Confirm all are populated:
 | `overallScore` | ~85–95 |
 | `fraudRiskLevel` | `Low` |
 | `fraudRiskReason` | Clean or flagged |
-| `matchedScholarships` | `[]` (empty — not triggered when eligible) |
+| `matchedScholarships` | `[]` (empty when eligible) |
 | `reviewerSummary` | 200–300 word panel summary |
 | `recommendedDecision` | `Approve` |
 | `notificationMessage` | Full email draft |
 
 > All outputs are **AI recommendations**. A human reviewer makes the final award decision.
 
-### 5. Run additional demo scenarios
+### Additional demo scenarios (Studio Web Run panel)
 
-Open `Solution/Agent/sample_applicants.json` and paste each `input` block into the Run panel:
+Open `Solution/Agent/sample_applicants.json`, copy each applicant's `input` block, paste into the Run panel, and click **Run**:
 
 | Demo ID | Scenario | Expected outcome |
 |---------|----------|------------------|
@@ -209,24 +220,24 @@ Open `Solution/Agent/sample_applicants.json` and paste each `input` block into t
 
 For a live presentation walkthrough, see `Solution/Agent/DEMO_SCRIPT.md`.
 
-### 6. Run with documents (Stage 1)
+### Run with documents — Orchestrator only
 
-To test document verification, run via **Orchestrator** (not the Studio Web test panel alone):
+Document verification (Stage 1) requires **Orchestrator** — the Studio Web Run panel alone cannot attach PDFs:
 
 1. **Publish** the agent from Studio Web (version `1.0.0`)
-2. Start a job in Orchestrator with the text fields above **plus** PDF attachments for any of:
+2. Start a job in **Orchestrator** with the text fields above **plus** PDF attachments for any of:
    - `academicTranscript`
    - `nationalId`
    - `cv`
    - `recommendationLetter`
 3. Attachments must be Orchestrator **`JobAttachment`** objects with a valid `ID`
-4. The agent extracts document data, cross-checks against the form, and flags inconsistencies in `fraudRiskReason`
+4. The agent calls **Analyze Files** and **DeepRAG**, then cross-checks documents against the form
 
-### 7. Publish for production (optional)
+### Production / Maestro (optional)
 
-1. In Studio Web, click **Publish** on the Agent project
-2. Set version `1.0.0` and publish to **Orchestrator**
-3. Run from **Orchestrator → Automations → Processes**, or trigger from a **Maestro** case
+1. **Publish** from Studio Web → **Orchestrator**
+2. Trigger from **Maestro** cases or **Orchestrator → Automations → Processes**
+3. Or use UiPath CLI after login: `uip agent run start <releaseKey> -i '<json>'`
 
 ---
 
