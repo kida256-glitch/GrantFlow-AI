@@ -54,107 +54,179 @@ GrantFlow AI is implemented as a UiPath low-code agent (`Solution/Agent/agent.js
 
 ## Setup Instructions
 
-Follow these steps to configure and run GrantFlow AI for judging.
+Follow these steps once to import and configure GrantFlow AI on your UiPath tenant.
 
 ### Prerequisites
 
-- UiPath Automation Cloud tenant with access to **Studio Web** and **Agent Builder**
-- **UiPath Maestro** enabled (Track 1: Maestro Case)
-- **UiPath Orchestrator** for job execution and document attachments
-- Built-in agent tools available: **Analyze Files** and **DeepRAG**
+- UiPath **Automation Cloud** account with **Studio Web** and **Agent Builder** enabled
+- LLM access to **`anthropic.claude-sonnet-4-6`** on your tenant
+- Built-in agent tools: **Analyze Files** and **DeepRAG**
+- **UiPath Orchestrator** (required for document attachments and published runs)
+- **UiPath Maestro** (Track 1 — case lifecycle integration)
 
-### Step 1 — Clone the repository
+### Step 1 — Get the repository
 
 ```bash
 git clone https://github.com/kida256-glitch/GrantFlow-AI.git
 cd GrantFlow-AI
 ```
 
-The runnable UiPath solution lives in the **`Solution/`** folder. Reference data and legacy agent exports are also available under `data/` and `agent/`.
+All runnable agent files are under **`Solution/`**. Demo data is in **`Solution/Agent/sample_applicants.json`**.
 
-### Step 2 — Open the solution in Studio Web
+### Step 2 — Import the solution into Studio Web
 
-1. Log in to [cloud.uipath.com](https://cloud.uipath.com) and open **Studio Web**
-2. **Import** or **Open** the solution from the `Solution/` folder:
-   - Solution file: `Solution/Solution.uipx`
-   - Agent project: `Solution/Agent/project.uiproj`
-3. In the solution explorer, open the **Agent** project — this loads `Solution/Agent/agent.json` in Agent Builder
+1. Log in to [cloud.uipath.com](https://cloud.uipath.com)
+2. Open **Studio Web** → **Solutions**
+3. Click **Import solution** and upload the **`Solution`** folder (or zip the `Solution` folder first, then upload)
+4. After import, open the solution and select the **Agent** project
+5. Agent Builder opens the GrantFlow AI canvas (`Solution/Agent/agent.json`)
 
-> If the solution is already deployed on your tenant, you can also navigate directly to **`/solution/Agent`** in Studio Web.
+> **Already on this tenant?** If the solution is deployed, go directly to **`/solution/Agent`** in Studio Web.
 
-### Step 3 — Verify agent configuration
+### Step 3 — Wire the built-in tools
 
-1. Open `Solution/Agent/agent.json` in Agent Builder and confirm:
-   - **Model:** `anthropic.claude-sonnet-4-6`
-   - **Type:** Low-code
-   - **Max iterations:** 25
-   - **Temperature:** 0
-2. Confirm the two built-in tools are enabled under **Resources**:
-   - **Analyze Files** (`Solution/Agent/resources/Analyze Files/resource.json`)
-   - **DeepRAG** (`Solution/Agent/resources/DeepRAG/resource.json`)
+The agent needs two tools on the canvas before it can verify documents:
 
-If the tools are not yet on the canvas, click **+ Add Tool** and add **Analyze Files** and **DeepRAG** from the built-in tools list, then **Save**. See `Solution/Agent/SETUP_GUIDE.md` for detailed tool wiring steps.
+1. On the Agent Builder canvas, click **+ Add Tool**
+2. Add **Analyze Files** (`toolType: analyze-attachments`) and connect it to the agent
+3. Click **+ Add Tool** again and add **DeepRAG** (`toolType: deep-rag`)
+4. Click **Save**
 
-### Step 4 — Connect Maestro (Track 1)
+Tool configs are pre-defined in `Solution/Agent/resources/`. See `Solution/Agent/SETUP_GUIDE.md` for screenshots-level detail.
 
-1. In **UiPath Maestro**, create or open a case type for scholarship applications
-2. Map agent inputs (applicant details, scholarship criteria) and outputs (scores, decision, notification) to case fields
-3. Trigger the GrantFlow AI agent when a new application case is created or submitted
+### Step 4 — Validate (optional)
 
-### Step 5 — Run a test (no documents)
+If you use the UiPath CLI locally:
 
-Use **DEMO-001** from `Solution/Agent/sample_applicants.json` (or `data/sample_applicants.json`) — a strong STEM applicant expected to be **Approved**.
+```bash
+uip agent validate /solution/Agent --output json
+```
 
-1. In Agent Builder, click **Run** (or open the agent test panel)
-2. Paste the following input:
+Expected: `"Status": "Valid"` with **2 resources** (Analyze Files + DeepRAG).
+
+### Step 5 — Connect Maestro (Track 1)
+
+1. In **UiPath Maestro**, create a case type for scholarship applications
+2. Map agent **inputs** (applicant fields, `scholarshipCriteria`) and **outputs** (scores, `recommendedDecision`, `reviewerSummary`, etc.) to case properties
+3. Trigger the published agent when a case moves to the evaluation stage
+
+Output mapping reference:
+
+| Agent output | Maestro case property |
+|--------------|----------------------|
+| `applicationId` | Case ID |
+| `eligibilityStatus` | Case stage / status |
+| `fraudRiskLevel` | Risk level |
+| `recommendedDecision` | Pending action |
+| `reviewerSummary` | Case description |
+
+---
+
+## How to Run the Agent
+
+Use this process every time you evaluate an application.
+
+### 1. Open the agent
+
+1. Go to **Studio Web** → open the **GrantFlow AI** solution → **Agent** project
+2. Confirm **Analyze Files** and **DeepRAG** appear on the canvas
+3. Click **Run** (test panel) for a quick test, or **Publish** first for Orchestrator/Maestro runs
+
+### 2. Provide application input
+
+Paste a JSON object with the **9 required fields**. Optional fields: `phoneNumber` and four document attachments.
+
+**Required fields:**
+
+| Field | Example |
+|-------|---------|
+| `applicantName` | `"Amara Osei"` |
+| `email` | `"amara.osei@ug.edu.gh"` |
+| `country` | `"Ghana"` |
+| `university` | `"University of Ghana"` |
+| `degreeProgram` | `"Computer Science"` |
+| `gpa` | `"3.8/4.0"` |
+| `personalStatement` | Essay text |
+| `scholarshipName` | `"STEM Excellence Award"` |
+| `scholarshipCriteria` | JSON string, e.g. `"{\"minGpa\": 3.5, ...}"` |
+
+**Quick test — copy DEMO-001** from `Solution/Agent/sample_applicants.json`:
 
 ```json
 {
   "applicantName": "Amara Osei",
-  "email": "amara.osei@ug.edu.gh",
+  "email": "amara.osei@university.edu",
+  "phoneNumber": "+233-20-123-4567",
   "country": "Ghana",
   "university": "University of Ghana",
   "degreeProgram": "Computer Science",
   "gpa": "3.8/4.0",
-  "personalStatement": "Growing up in Accra, I taught myself Python at 14 and built a mobile app helping 200 local market traders. I founded Code4Africa, training 180 students in programming. My AI research was presented at the African AI Symposium 2026.",
   "scholarshipName": "STEM Excellence Award",
-  "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\"]}"
+  "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\", \"Engineering\", \"Mathematics\", \"Data Science\"], \"level\": [\"undergraduate\", \"graduate\"]}",
+  "personalStatement": "Growing up in Accra, I witnessed firsthand how technology could transform communities..."
 }
 ```
 
-3. Run the agent and verify outputs:
-   - `eligibilityStatus`: **Eligible**
-   - `overallScore`: ~**85**
-   - `fraudRiskLevel`: **Low**
-   - `recommendedDecision`: **Approve**
-   - All **14 output fields** populated
+### 3. Execute the agent
 
-### Step 6 — Run additional demo scenarios
+1. Click **Run** in Agent Builder (Studio Web test panel)
+2. The agent autonomously runs all **7 pipeline stages** (up to 25 iterations)
+3. If documents are attached, the agent calls **Analyze Files** and **DeepRAG** in Stage 1; if not, Stage 1 is skipped and evaluation continues from Stage 2
+4. Wait for the run to complete — typical runtime is under 60 seconds
+
+### 4. Review the output
+
+The agent returns **14 output fields**. Confirm all are populated:
+
+| Field | DEMO-001 expected value |
+|-------|-------------------------|
+| `applicationId` | `GF-UNI-YYYYMMDD-XXXX` format |
+| `eligibilityStatus` | `Eligible` |
+| `eligibilityReason` | Reason citing criteria met |
+| `academicScore` | ~90–100 |
+| `leadershipScore` | 0–100 |
+| `communityImpactScore` | 0–100 |
+| `essayQualityScore` | 0–100 |
+| `overallScore` | ~85–95 |
+| `fraudRiskLevel` | `Low` |
+| `fraudRiskReason` | Clean or flagged |
+| `matchedScholarships` | `[]` (empty — not triggered when eligible) |
+| `reviewerSummary` | 200–300 word panel summary |
+| `recommendedDecision` | `Approve` |
+| `notificationMessage` | Full email draft |
+
+> All outputs are **AI recommendations**. A human reviewer makes the final award decision.
+
+### 5. Run additional demo scenarios
+
+Open `Solution/Agent/sample_applicants.json` and paste each `input` block into the Run panel:
 
 | Demo ID | Scenario | Expected outcome |
 |---------|----------|------------------|
-| **DEMO-001** | Strong STEM applicant | Eligible · Approve · Low fraud |
-| **DEMO-002** | Below GPA cutoff (Priya Sharma) | Not Eligible · Scholarship matches returned |
-| **DEMO-003** | Impossible GPA + generic essay (John Smith) | High fraud risk · Reject or manual review |
+| **DEMO-001** | Strong STEM applicant (Amara Osei) | Eligible · Approve · Low fraud |
+| **DEMO-002** | Below GPA cutoff (Priya Sharma) | Not Eligible · `matchedScholarships` populated |
+| **DEMO-003** | Impossible GPA + generic essay (John Smith) | High fraud · Reject or Request More Info |
 
-Full inputs for DEMO-002 and DEMO-003 are in `Solution/Agent/sample_applicants.json`. For a guided 5-minute walkthrough, see `Solution/Agent/DEMO_SCRIPT.md`.
+For a live presentation walkthrough, see `Solution/Agent/DEMO_SCRIPT.md`.
 
-### Step 7 — Test with documents (optional)
+### 6. Run with documents (Stage 1)
 
-To exercise **Stage 1 (Document Verification)**, attach PDFs via Orchestrator `JobAttachment` fields:
+To test document verification, run via **Orchestrator** (not the Studio Web test panel alone):
 
-- `academicTranscript`
-- `nationalId`
-- `cv`
-- `recommendationLetter`
+1. **Publish** the agent from Studio Web (version `1.0.0`)
+2. Start a job in Orchestrator with the text fields above **plus** PDF attachments for any of:
+   - `academicTranscript`
+   - `nationalId`
+   - `cv`
+   - `recommendationLetter`
+3. Attachments must be Orchestrator **`JobAttachment`** objects with a valid `ID`
+4. The agent extracts document data, cross-checks against the form, and flags inconsistencies in `fraudRiskReason`
 
-The agent will invoke **Analyze Files** and **DeepRAG** to extract and cross-check document content against the application form.
-
-### Step 8 — Publish to Orchestrator (optional)
+### 7. Publish for production (optional)
 
 1. In Studio Web, click **Publish** on the Agent project
 2. Set version `1.0.0` and publish to **Orchestrator**
-3. Run the process from Orchestrator → **Automations** → **Processes**, or trigger it from a Maestro case
+3. Run from **Orchestrator → Automations → Processes**, or trigger from a **Maestro** case
 
 ---
 
