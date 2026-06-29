@@ -48,7 +48,7 @@ GrantFlow AI is an autonomous scholarship application processing platform that h
 
 **Low-code Agent only.**
 
-GrantFlow AI is implemented as a UiPath low-code agent (`agent/agent.json`, `"type": "lowCode"`). The solution does **not** use Coded Agents. All pipeline logic is defined through the agent system prompt, input/output schemas, and built-in tools (Analyze Files, DeepRAG) configured in Agent Builder.
+GrantFlow AI is implemented as a UiPath low-code agent (`Solution/Agent/agent.json`, `"type": "lowCode"`). The solution does **not** use Coded Agents. All pipeline logic is defined through the agent system prompt, input/output schemas, and built-in tools (Analyze Files, DeepRAG) configured in Agent Builder.
 
 ---
 
@@ -63,34 +63,49 @@ Follow these steps to configure and run GrantFlow AI for judging.
 - **UiPath Orchestrator** for job execution and document attachments
 - Built-in agent tools available: **Analyze Files** and **DeepRAG**
 
-### Step 1 — Import the project
+### Step 1 — Clone the repository
 
-1. Clone or download this repository: [github.com/kida256-glitch/GrantFlow-AI](https://github.com/kida256-glitch/GrantFlow-AI)
-2. In **Studio Web**, open the Agent solution at `/solution/Agent`
-3. Import or open the `agent/` folder contents (`project.uiproj`, `agent.json`, `entry-points.json`, and `resources/`)
+```bash
+git clone https://github.com/kida256-glitch/GrantFlow-AI.git
+cd GrantFlow-AI
+```
 
-### Step 2 — Verify agent configuration
+The runnable UiPath solution lives in the **`Solution/`** folder. Reference data and legacy agent exports are also available under `data/` and `agent/`.
 
-1. Open `agent/agent.json` in Agent Builder and confirm:
+### Step 2 — Open the solution in Studio Web
+
+1. Log in to [cloud.uipath.com](https://cloud.uipath.com) and open **Studio Web**
+2. **Import** or **Open** the solution from the `Solution/` folder:
+   - Solution file: `Solution/Solution.uipx`
+   - Agent project: `Solution/Agent/project.uiproj`
+3. In the solution explorer, open the **Agent** project — this loads `Solution/Agent/agent.json` in Agent Builder
+
+> If the solution is already deployed on your tenant, you can also navigate directly to **`/solution/Agent`** in Studio Web.
+
+### Step 3 — Verify agent configuration
+
+1. Open `Solution/Agent/agent.json` in Agent Builder and confirm:
    - **Model:** `anthropic.claude-sonnet-4-6`
    - **Type:** Low-code
    - **Max iterations:** 25
    - **Temperature:** 0
-2. Confirm the two tools are enabled under **Resources**:
-   - `Analyze Files/` (`agent/resources/analyze-files/resource.json`)
-   - `DeepRAG/` (`agent/resources/deeprag/resource.json`)
+2. Confirm the two built-in tools are enabled under **Resources**:
+   - **Analyze Files** (`Solution/Agent/resources/Analyze Files/resource.json`)
+   - **DeepRAG** (`Solution/Agent/resources/DeepRAG/resource.json`)
 
-### Step 3 — Connect Maestro (Track 1)
+If the tools are not yet on the canvas, click **+ Add Tool** and add **Analyze Files** and **DeepRAG** from the built-in tools list, then **Save**. See `Solution/Agent/SETUP_GUIDE.md` for detailed tool wiring steps.
+
+### Step 4 — Connect Maestro (Track 1)
 
 1. In **UiPath Maestro**, create or open a case type for scholarship applications
 2. Map agent inputs (applicant details, scholarship criteria) and outputs (scores, decision, notification) to case fields
 3. Trigger the GrantFlow AI agent when a new application case is created or submitted
 
-### Step 4 — Run a test (no documents)
+### Step 5 — Run a test (no documents)
 
-Use **DEMO-001** from `data/sample_applicants.json` — a strong STEM applicant expected to be **Approved**.
+Use **DEMO-001** from `Solution/Agent/sample_applicants.json` (or `data/sample_applicants.json`) — a strong STEM applicant expected to be **Approved**.
 
-1. In Agent Builder, open the agent test panel
+1. In Agent Builder, click **Run** (or open the agent test panel)
 2. Paste the following input:
 
 ```json
@@ -114,7 +129,7 @@ Use **DEMO-001** from `data/sample_applicants.json` — a strong STEM applicant 
    - `recommendedDecision`: **Approve**
    - All **14 output fields** populated
 
-### Step 5 — Run additional demo scenarios
+### Step 6 — Run additional demo scenarios
 
 | Demo ID | Scenario | Expected outcome |
 |---------|----------|------------------|
@@ -122,9 +137,9 @@ Use **DEMO-001** from `data/sample_applicants.json` — a strong STEM applicant 
 | **DEMO-002** | Below GPA cutoff (Priya Sharma) | Not Eligible · Scholarship matches returned |
 | **DEMO-003** | Impossible GPA + generic essay (John Smith) | High fraud risk · Reject or manual review |
 
-Full inputs for DEMO-002 and DEMO-003 are in `data/sample_applicants.json`.
+Full inputs for DEMO-002 and DEMO-003 are in `Solution/Agent/sample_applicants.json`. For a guided 5-minute walkthrough, see `Solution/Agent/DEMO_SCRIPT.md`.
 
-### Step 6 — Test with documents (optional)
+### Step 7 — Test with documents (optional)
 
 To exercise **Stage 1 (Document Verification)**, attach PDFs via Orchestrator `JobAttachment` fields:
 
@@ -135,25 +150,49 @@ To exercise **Stage 1 (Document Verification)**, attach PDFs via Orchestrator `J
 
 The agent will invoke **Analyze Files** and **DeepRAG** to extract and cross-check document content against the application form.
 
+### Step 8 — Publish to Orchestrator (optional)
+
+1. In Studio Web, click **Publish** on the Agent project
+2. Set version `1.0.0` and publish to **Orchestrator**
+3. Run the process from Orchestrator → **Automations** → **Processes**, or trigger it from a Maestro case
+
 ---
 
 ## Project Structure
 
 ```
 GrantFlow-AI/
-├── agent/
-│   ├── agent.json
-│   ├── entry-points.json
-│   ├── project.uiproj
-│   └── resources/
-│       ├── analyze-files/resource.json
-│       └── deeprag/resource.json
-├── data/
+├── Solution/                          ← UiPath solution (start here for judging)
+│   ├── Solution.uipx                  ← Solution manifest — open this in Studio Web
+│   ├── SolutionStorage.json
+│   └── Agent/
+│       ├── agent.json                 ← Main low-code agent configuration
+│       ├── entry-points.json
+│       ├── project.uiproj
+│       ├── sample_applicants.json     ← Demo test cases (DEMO-001, 002, 003)
+│       ├── scholarship_database.json
+│       ├── email_templates.json
+│       ├── SETUP_GUIDE.md             ← Tool wiring and first-run guide
+│       ├── DEMO_SCRIPT.md             ← 5-minute hackathon demo script
+│       ├── ARCHITECTURE.md            ← System architecture diagrams
+│       └── resources/
+│           ├── Analyze Files/resource.json
+│           └── DeepRAG/resource.json
+├── data/                              ← Reference data (mirrors Solution/Agent/)
 │   ├── scholarship_database.json
 │   ├── sample_applicants.json
 │   └── email_templates.json
+├── agent/                             ← Legacy agent export (same config as Solution/Agent/)
 └── README.md
 ```
+
+### Additional documentation (in `Solution/Agent/`)
+
+| File | Purpose |
+|------|---------|
+| `SETUP_GUIDE.md` | Step-by-step tool setup and environment configuration |
+| `DEMO_SCRIPT.md` | 5-minute demo script for hackathon presentation |
+| `ARCHITECTURE.md` | Pipeline architecture and Maestro case lifecycle |
 
 ---
 

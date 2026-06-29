@@ -1,0 +1,58 @@
+{
+  "fileName": "evaluation-set-default.json",
+  "id": "a5440bbd-cb5a-4a91-aecb-9c1ba58570a7",
+  "name": "Default Evaluation Set",
+  "batchSize": 10,
+  "evaluatorRefs": [
+    "ac43728d-0b53-41cf-bc4a-844890fdbccb"
+  ],
+  "evaluations": [
+    {
+      "id": "853e2c11-bb08-4e1e-944d-c878b1a90dfd",
+      "name": "Debug Run 6/26/2026, 11:17:58 PM",
+      "inputs": {
+        "applicantName": "Amara Osei",
+        "email": "amara.osei@university.edu",
+        "phoneNumber": "",
+        "country": "Ghana",
+        "university": "University of Ghana",
+        "degreeProgram": "Computer Science",
+        "gpa": "3.8/4.0",
+        "personalStatement": "Growing up in Accra, I taught myself Python at 14 and built a mobile app helping 200 local traders. I lead the 45-member CS Society and founded Code4Africa, training 180 students. My AI research was presented at the African AI Symposium 2025.",
+        "scholarshipName": "STEM Excellence Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\"]}"
+      },
+      "expectedOutput": {
+        "applicationId": "GF-UNI-20260626-7341",
+        "eligibilityStatus": "Eligible",
+        "eligibilityReason": "Amara Osei meets all criteria for the STEM Excellence Award. GPA: 3.8/4.0 (normalized 3.8) exceeds the minimum threshold of 3.5. Country: Ghana qualifies under the \"Any\" eligible countries policy. Degree: Computer Science is an exact match to the eligible degrees list. No disqualifying criteria identified.",
+        "academicScore": 93,
+        "leadershipScore": 88,
+        "communityImpactScore": 85,
+        "essayQualityScore": 88,
+        "overallScore": 89,
+        "fraudRiskLevel": "Low",
+        "fraudRiskReason": "No fraud indicators detected. GPA of 3.8/4.0 is within a plausible range. No document name mismatches (no documents were submitted). The personal statement contains highly specific, verifiable personal details — a named city (Accra), a concrete app project with quantified impact (200 traders), a named organization (Code4Africa), a specific training figure (180 students), and a named external event (African AI Symposium 2025) — all of which are inconsistent with generic AI-generated content. No institutional inconsistencies identified. Overall fraud risk is Low.",
+        "matchedScholarships": [],
+        "reviewerSummary": "Amara Osei is a Computer Science undergraduate at the University of Ghana (GPA: 3.8/4.0) applying for the STEM Excellence Award. The applicant is based in Accra, Ghana, and fully satisfies all stated eligibility criteria: GPA exceeds the 3.5 minimum, the degree is an exact match, and Ghana qualifies under the open-country policy.\n\n**Academic Standing:** A GPA of 3.8/4.0 places Amara in the high-achiever bracket, scoring 90 on the GPA benchmark scale with a 3-point bonus for AI research presentation, yielding an academicScore of 93. This reflects consistent academic excellence.\n\n**Key Strengths:** Amara demonstrates exceptional initiative — self-teaching Python at age 14 and building a functional mobile application with documented real-world impact (200 local traders served). Leadership is evidenced by heading a 45-member CS Society and founding Code4Africa, which has trained 180 students across the continent. Research credentials are bolstered by a presentation at the African AI Symposium 2025, a credible regional venue. These achievements collectively reflect measurable, multi-dimensional impact.\n\n**Essay Quality:** The personal statement is specific, authentic, and well-structured. It opens with a compelling personal narrative, demonstrates clear voice, provides concrete examples with quantified outcomes, and ties directly to the scholarship's STEM focus. Minor deduction for brevity — a slightly deeper reflection on future goals would strengthen it further.\n\n**Concerns:** No supporting documents were submitted. Verification of GPA, enrollment, and claimed achievements (Code4Africa, Symposium presentation) is pending.\n\n**Fraud Risk:** Low. All personal details are specific and internally consistent.\n\n**Recommendation:** Approve — High Confidence. Amara Osei is a standout candidate whose profile strongly aligns with the STEM Excellence Award's mission.",
+        "recommendedDecision": "Approve",
+        "notificationMessage": "Subject: GrantFlow AI — Your STEM Excellence Award Application Update\n\nDear Amara,\n\nCongratulations! 🎉 We are thrilled to inform you that your application for the **STEM Excellence Award** has been reviewed by GrantFlow AI and is being recommended for **approval** to our human review panel.\n\nYour application stood out for all the right reasons. From teaching yourself Python at 14 and building a mobile app that empowered 200 local traders in Accra, to founding Code4Africa and training 180 students, to presenting your AI research at the African AI Symposium 2025 — your journey is a powerful testament to what passion, purpose, and perseverance can achieve. Leading a 45-member CS Society further underscores your ability to inspire and mobilize others.\n\n**What Happens Next:**\n\n1. **Human Panel Review:** Your application will now be reviewed by our scholarship committee, who will make the final award decision. GrantFlow AI recommendations are advisory; all final decisions rest with the panel.\n2. **Document Submission:** To complete your application, please submit the following supporting documents at your earliest convenience:\n   - Official academic transcript confirming your GPA (3.8/4.0)\n   - Proof of enrollment at the University of Ghana\n   - Any supporting evidence for your listed achievements (e.g., Code4Africa documentation, Symposium participation certificate)\n3. **Timeline:** The review panel convenes within **14 business days** of receiving your complete documentation. You will receive a final decision via email at amara.osei@university.edu.\n4. **Award Details:** The STEM Excellence Award provides **$15,000 per year** to support your academic and research pursuits.\n\nPlease submit your documents through the GrantFlow applicant portal or reply directly to this email with your attachments. Should you have any questions, our support team is here to help.\n\nWe are rooting for you, Amara. Your work is already making a difference — this scholarship exists for exactly the kind of impact you are creating.\n\nWarm regards,\n**The GrantFlow AI Team**\nGrantFlow Scholarship Processing Platform\nsupport@grantflow.ai"
+      },
+      "expectedAgentBehavior": "",
+      "simulationInstructions": "",
+      "simulateInput": false,
+      "inputGenerationInstructions": "",
+      "simulateTools": false,
+      "evalSetId": "a5440bbd-cb5a-4a91-aecb-9c1ba58570a7",
+      "createdAt": "2026-06-26T20:17:58.394Z",
+      "updatedAt": "2026-06-26T20:17:58.394Z",
+      "source": "firstSuccessfulRun"
+    }
+  ],
+  "modelSettings": [],
+  "createdAt": "2026-06-26T10:47:33.175Z",
+  "updatedAt": "2026-06-26T20:17:58.394Z",
+  "agentMemoryEnabled": false,
+  "agentMemorySettings": [],
+  "lineByLineEvaluation": false
+}

@@ -1,0 +1,127 @@
+{
+  "version": "1.0.0",
+  "description": "Sample applicants for GrantFlow AI demo — covers all 5 decision branches",
+  "applicants": [
+    {
+      "id": "DEMO-001",
+      "scenario": "APPROVE — Strong eligible applicant with compelling personal story",
+      "input": {
+        "applicantName": "Amara Osei",
+        "email": "amara.osei@university.edu",
+        "phoneNumber": "+233-20-123-4567",
+        "country": "Ghana",
+        "university": "University of Ghana",
+        "degreeProgram": "Computer Science",
+        "gpa": "3.8/4.0",
+        "scholarshipName": "STEM Excellence Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\", \"Engineering\", \"Mathematics\", \"Data Science\"], \"level\": [\"undergraduate\", \"graduate\"]}",
+        "personalStatement": "Growing up in Accra, I witnessed firsthand how technology could transform communities — or leave them behind. At 14, I taught myself Python by borrowing my neighbor's laptop. By 16, I had built a mobile app that helped 200 local traders track inventory. That experience ignited a passion that has driven every academic and professional decision since. At the University of Ghana, I maintain a 3.8 GPA while leading our 45-member Computer Science Society, organizing three national hackathons that attracted over 600 participants. I also founded Code4Africa, a volunteer program that has trained 180 high school students in basic programming across three regions. My research on low-bandwidth AI models for rural connectivity was presented at the African AI Symposium 2025. The STEM Excellence Award would enable me to pursue my master's research in edge computing for healthcare delivery in remote communities."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Eligible",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Approve",
+        "academicScoreRange": "90-100",
+        "overallScoreRange": "85-95"
+      }
+    },
+    {
+      "id": "DEMO-002",
+      "scenario": "SCHOLARSHIP MATCH — Ineligible for target, strong for alternatives",
+      "input": {
+        "applicantName": "Priya Sharma",
+        "email": "priya.sharma@iit.ac.in",
+        "phoneNumber": "+91-98765-43210",
+        "country": "India",
+        "university": "IIT Bombay",
+        "degreeProgram": "Mechanical Engineering",
+        "gpa": "3.2/4.0",
+        "scholarshipName": "Research Innovation Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.7, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Any\"], \"level\": [\"graduate\"], \"researchExperienceRequired\": true}",
+        "personalStatement": "Engineering for me has never been about equations — it has been about solving real problems for real people. As the first woman from my village in Rajasthan to attend university, I carry the hopes of my community. I have maintained a 3.2 GPA while working part-time as a teaching assistant to support my education. Outside academics, I lead the Women in Engineering chapter at IIT Bombay with 120 members, and I have organized workshops reaching 500 female students in local schools. My capstone project designed a low-cost water purification system now deployed in three rural villages."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Not Eligible",
+        "eligibilityReasonContains": "GPA 3.2 does not meet the minimum 3.7",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Reject",
+        "matchedScholarshipsNote": "Should recommend: Women in Technology Grant (91%), STEM Excellence Award (78%), Emerging Leaders Scholarship (74%)"
+      }
+    },
+    {
+      "id": "DEMO-003",
+      "scenario": "HIGH FRAUD RISK — Impossible GPA + AI-generated essay",
+      "input": {
+        "applicantName": "John Smith",
+        "email": "johnsmith99@gmail.com",
+        "phoneNumber": "+1-555-0199",
+        "country": "United States",
+        "university": "State University",
+        "degreeProgram": "Business Administration",
+        "gpa": "4.8/4.0",
+        "scholarshipName": "Community Leaders Fund",
+        "scholarshipCriteria": "{\"minGpa\": 3.0, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Any\"], \"communityServiceRequired\": true}",
+        "personalStatement": "I am a highly motivated student with excellent leadership skills and strong academic performance. I have participated in many extracurricular activities and community service projects. I believe in the importance of education and I am committed to making a positive difference in the world. I have demonstrated leadership in various capacities and I am passionate about making an impact in my field of study. My future goals align perfectly with the mission of this scholarship and I am confident I would be an excellent recipient."
+      },
+      "expectedOutput": {
+        "fraudRiskLevel": "High",
+        "recommendedDecision": "Request More Info",
+        "fraudFlagsExpected": ["Impossible GPA 4.8 on 4.0 scale", "Generic AI-pattern personal statement with no personal anecdotes"],
+        "reviewerSummaryContains": "HIGH FRAUD RISK ALERT"
+      }
+    },
+    {
+      "id": "DEMO-004",
+      "scenario": "NEEDS MANUAL REVIEW — Borderline GPA, exceptional extracurriculars",
+      "input": {
+        "applicantName": "Fatima Al-Rashidi",
+        "email": "fatima.alrashidi@university.jo",
+        "phoneNumber": "+962-79-123-4567",
+        "country": "Jordan",
+        "university": "University of Jordan",
+        "degreeProgram": "Environmental Science",
+        "gpa": "3.48/4.0",
+        "scholarshipName": "STEM Excellence Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Environmental Science\", \"Engineering\", \"Biology\"], \"level\": [\"undergraduate\", \"graduate\"]}",
+        "personalStatement": "The Dead Sea is dying — its water level drops one meter every year, and I have watched this happen through my childhood window in Aqaba. This environmental crisis became my calling. At the University of Jordan, my GPA of 3.48 reflects a challenging curriculum while balancing three part-time jobs to fund my education. But my GPA does not tell the full story: I founded the Jordan Youth Climate Coalition, which successfully lobbied for a national plastic bag ban in 2025 — the first environmental legislation championed by students in our country's history. I have published two papers on water conservation in the Jordan Valley and presented at COP30 as a youth delegate."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Needs Manual Review",
+        "eligibilityReasonContains": "GPA 3.48 is marginally below the 3.5 minimum",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Request More Info",
+        "reviewNote": "Exceptional extracurriculars and publications warrant human review despite borderline GPA"
+      }
+    },
+    {
+      "id": "DEMO-005",
+      "scenario": "APPROVE — First-generation student, perfect essay, medical field",
+      "input": {
+        "applicantName": "Carlos Mendoza Rivera",
+        "email": "carlos.mendoza@unam.mx",
+        "phoneNumber": "+52-55-1234-5678",
+        "country": "Mexico",
+        "university": "UNAM",
+        "degreeProgram": "Medicine",
+        "gpa": "9.1/10",
+        "scholarshipName": "Global Health Innovation Fellowship",
+        "scholarshipCriteria": "{\"minGpa\": 3.4, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Medicine\", \"Public Health\", \"Nursing\", \"Global Health\"], \"level\": [\"graduate\"]}",
+        "personalStatement": "My mother cleaned offices for 22 years so that I could one day wear a white coat. I am the first person in my family — and in my neighborhood of Tepito, Mexico City — to attend university. The path has not been linear: I deferred my first year of medical school to care for my father after his stroke, during which I learned more about healthcare inequity than any textbook could teach. Returning to UNAM, I earned a 9.1/10 GPA while co-founding Medicos por Tepito, a free clinic that has served 2,300 low-income patients in two years. Our mobile vaccination unit, staffed by 40 student volunteers, reached communities the formal health system had abandoned. I also mentor 15 first-generation university students from my neighborhood."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Eligible",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Approve",
+        "academicScoreRange": "88-100",
+        "overallScoreRange": "88-100",
+        "essayQualityScoreRange": "90-100"
+      }
+    }
+  ],
+  "demoNotes": {
+    "quickDemo": "Use DEMO-001 for a clean Approve path (15-30 seconds)",
+    "fraudDemo": "Use DEMO-003 to show High Fraud Risk detection",
+    "matchDemo": "Use DEMO-002 to showcase the Scholarship Match differentiator",
+    "borderlineDemo": "Use DEMO-004 to show the human-in-the-loop escalation path"
+  }
+}

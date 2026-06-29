@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GrantFlow AI — Download ZIP</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
+.card{background:#1e293b;border-radius:16px;padding:48px;max-width:580px;width:100%;text-align:center;box-shadow:0 25px 50px rgba(0,0,0,.5)}
+h1{font-size:2rem;font-weight:700;margin-bottom:8px;color:#f97316}
+.sub{color:#94a3b8;margin-bottom:24px}
+.fl{background:#0f172a;border-radius:8px;padding:16px;text-align:left;margin-bottom:28px;font-size:.8rem;color:#64748b;line-height:2}
+.fl b{color:#94a3b8;display:block;margin-bottom:2px}
+button{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;padding:16px 40px;font-size:1.1rem;font-weight:600;border-radius:10px;cursor:pointer;width:100%}
+button:hover{opacity:.9}
+#st{margin-top:20px;font-size:.9rem;color:#64748b;min-height:24px}
+pre{display:none}
+</style>
+<script>
+function go(){
+const enc=new TextEncoder(),st=document.getElementById('st');
+st.textContent='Building ZIP...';
+const T=new Uint32Array(256);
+for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;T[i]=c;}
+function crc(u){let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=(c>>>8)^T[(c^u[i])&0xFF];return(c^0xFFFFFFFF)>>>0;}
+function w2(v){return new Uint8Array([v&0xFF,(v>>8)&0xFF]);}
+function w4(v){return new Uint8Array([v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF]);}
+try{
+const ps=document.querySelectorAll('pre[data-path]'),ents=[],bs=[];
+let off=0;
+for(const p of ps){
+const d=enc.encode(p.textContent),n=enc.encode(p.dataset.path),cr=crc(d);
+const h=new Uint8Array(30+n.length);
+h.set([0x50,0x4B,0x03,0x04],0);h.set(w2(20),4);h.set(w2(0),6);h.set(w2(0),8);
+h.set(w2(0),10);h.set(w2(0),12);h.set(w4(cr),14);h.set(w4(d.length),18);
+h.set(w4(d.length),22);h.set(w2(n.length),26);h.set(w2(0),28);h.set(n,30);
+ents.push({n,cr,sz:d.length,off});bs.push(h,d);off+=h.length+d.length;
+}
+const cs=off;
+for(const e of ents){
+const c=new Uint8Array(46+e.n.length);
+c.set([0x50,0x4B,0x01,0x02],0);c.set(w2(20),4);c.set(w2(20),6);c.set(w2(0),8);
+c.set(w2(0),10);c.set(w2(0),12);c.set(w2(0),14);c.set(w4(e.cr),16);
+c.set(w4(e.sz),20);c.set(w4(e.sz),24);c.set(w2(e.n.length),28);
+c.set(w2(0),30);c.set(w2(0),32);c.set(w2(0),34);c.set(w2(0),36);
+c.set(w4(0),38);c.set(w4(e.off),42);c.set(e.n,46);
+bs.push(c);off+=c.length;
+}
+const e=new Uint8Array(22);
+e.set([0x50,0x4B,0x05,0x06],0);e.set(w2(0),4);e.set(w2(0),6);
+e.set(w2(ents.length),8);e.set(w2(ents.length),10);
+e.set(w4(off-cs),12);e.set(w4(cs),16);e.set(w2(0),20);bs.push(e);
+const tot=bs.reduce((s,b)=>s+b.length,0),z=new Uint8Array(tot);
+let pos=0;for(const b of bs){z.set(b,pos);pos+=b.length;}
+const url=URL.createObjectURL(new Blob([z.buffer],{type:'application/zip'}));
+const a=document.createElement('a');a.href=url;a.download='GrantFlow-AI.zip';
+document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+st.textContent='✅ GrantFlow-AI.zip downloaded! Check your Downloads folder.';
+}catch(err){st.textContent='❌ Error: '+err.message;console.error(err);}
+}
+</script>
+</head>
+<body>
+<div class="card">
+<h1>&#11015; GrantFlow AI</h1>
+<p class="sub">UiPath AgentHack 2026 — Track 1: Maestro Case</p>
+<div class="fl">
+<b>12 files included in ZIP:</b>
+agent/agent.json · entry-points.json · project.uiproj<br>
+resources/analyze-files/resource.json · resources/deeprag/resource.json<br>
+data/scholarship_database.json · sample_applicants.json · email_templates.json<br>
+README.md · ARCHITECTURE.md · DEMO_SCRIPT.md · SETUP_GUIDE.md
+</div>
+<button onclick="go()">&#11015; Download GrantFlow-AI.zip</button>
+<div id="st">Ready — click to download all 12 files as ZIP</div>
+</div>
+<pre data-path="GrantFlow-AI/agent/project.uiproj">{
+  "ProjectType": "Agent",
+  "Name": "GrantFlow AI",
+  "Description": "AI-powered scholarship and student financial aid processing platform — 7-stage autonomous evaluation pipeline with document verification, eligibility assessment, AI scoring, fraud detection, scholarship matching, and human-in-the-loop review.",
+  "MainFile": null
+}
+</pre>
+<pre data-path="GrantFlow-AI/agent/agent.json">{
+  "version": "1.1.0",
+  "settings": {
+    "model": "anthropic.claude-sonnet-4-6",
+    "maxTokens": 64000,
+    "temperature": 0,
+    "engine": "basic-v2",
+    "maxIterations": 25,
+    "mode": "standard"
+  },
+  "inputSchema": {
+    "type": "object",
+    "required": ["applicantName","email","country","university","degreeProgram","gpa","personalStatement","scholarshipName","scholarshipCriteria"],
+    "properties": {
+      "applicantName": {"type": "string","description": "Full name of the scholarship applicant"},
+      "email": {"type": "string","description": "Applicant email address"},
+      "phoneNumber": {"type": "string","description": "Applicant phone number (optional)"},
+      "country": {"type": "string","description": "Applicant country of residence or citizenship"},
+      "university": {"type": "string","description": "University name the applicant attends"},
+      "degreeProgram": {"type": "string","description": "Degree program (e.g. Computer Science, Medicine)"},
+      "gpa": {"type": "string","description": "GPA and scale (e.g. 3.8/4.0 or 4.5/5.0 or 8.5/10)"},
+      "personalStatement": {"type": "string","description": "Applicant personal statement or essay text"},
+      "scholarshipName": {"type": "string","description": "Name of the scholarship being applied for"},
+      "scholarshipCriteria": {"type": "string","description": "JSON string of scholarship eligibility criteria (minGpa, eligibleCountries, eligibleDegrees, etc.)"},
+      "academicTranscript": {"description": "Academic transcript document (PDF)","$ref": "#/definitions/job-attachment"},
+      "nationalId": {"description": "National ID or passport document","$ref": "#/definitions/job-attachment"},
+      "cv": {"description": "CV or Resume document (PDF)","$ref": "#/definitions/job-attachment"},
+      "recommendationLetter": {"description": "Recommendation letter from professor or employer","$ref": "#/definitions/job-attachment"}
+    },
+    "definitions": {
+      "job-attachment": {
+        "type": "object","required": ["ID"],"x-uipath-resource-kind": "JobAttachment",
+        "properties": {
+          "ID": {"type": "string","description": "Orchestrator attachment key"},
+          "FullName": {"type": "string","description": "File name"},
+          "MimeType": {"type": "string","description": "MIME type, e.g. application/pdf"},
+          "Metadata": {"type": "object","description": "Dictionary of string metadata","additionalProperties": {"type": "string"}}
+        }
+      }
+    }
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "applicationId": {"type": "string","description": "Generated unique application ID in format GF-UNI-YYYYMMDD-XXXX"},
+      "eligibilityStatus": {"type": "string","description": "Eligible | Not Eligible | Needs Manual Review"},
+      "eligibilityReason": {"type": "string","description": "Detailed explanation of the eligibility decision"},
+      "academicScore": {"type": "number","description": "Academic performance score, integer 0-100"},
+      "leadershipScore": {"type": "number","description": "Leadership and initiative score, integer 0-100"},
+      "communityImpactScore": {"type": "number","description": "Community service and social impact score, integer 0-100"},
+      "essayQualityScore": {"type": "number","description": "Personal statement quality score, integer 0-100"},
+      "overallScore": {"type": "number","description": "Weighted composite score: academic 30% + leadership 25% + community 25% + essay 20%, integer 0-100"},
+      "fraudRiskLevel": {"type": "string","description": "Low | Medium | High"},
+      "fraudRiskReason": {"type": "string","description": "Explanation of fraud risk flags or confirmation of clean status"},
+      "matchedScholarships": {"type": "array","description": "List of alternative scholarship recommendations. Empty array [] if not triggered.","items": {"type": "object","properties": {"name": {"type": "string","description": "Scholarship name"},"match_percentage": {"type": "number","description": "Match score 0-100"},"match_reason": {"type": "string","description": "Why this scholarship matches the applicant"}}}},
+      "reviewerSummary": {"type": "string","description": "200-300 word professional summary for the human review panel"},
+      "recommendedDecision": {"type": "string","description": "Approve | Reject | Request More Info"},
+      "notificationMessage": {"type": "string","description": "Full professional email notification draft for the applicant"}
+    }
+  },
+  "metadata": {"storageVersion": "50.0.0","isConversational": false,"targetRuntime": "pythonAgent","showProjectCreationExperience": false},
+  "type": "lowCode",
+  "guardrails": [],
+  "projectId": "da596023-6f5d-424b-bc92-38c3b3e4398c",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are GrantFlow AI, an autonomous scholarship application processing platform. For every application, execute ALL 7 pipeline stages and populate ALL 14 output fields. STAGE 1 DOCUMENT VERIFICATION: If no document files have been attached, skip this entire stage and write No documents provided in reviewerSummary, then proceed to Stage 2. Only execute this stage when file attachments with valid IDs are present. STAGE 2 ELIGIBILITY ASSESSMENT: Parse scholarshipCriteria JSON. Check minGpa (normalize GPA: divide numerator by denominator times 4.0), eligibleCountries (Any means all qualify), eligibleDegrees (partial match OK), and all other criteria. Set eligibilityStatus to Eligible, Not Eligible, or Needs Manual Review. For Not Eligible always name the exact failing criterion in eligibilityReason. Use Needs Manual Review for ambiguous or borderline cases. STAGE 3 SCORING (all scores as integer numbers 0-100): academicScore uses GPA benchmarks 4.0=100 3.7=90 3.5=80 3.0=65 2.5=45 below 2.0=20 plus up to 15 bonus for honours or publications. leadershipScore: 0=no evidence 30=role mentioned 60=role with context 80=measurable impact 100=exceptional outcomes. communityImpactScore: same rubric as leadership based on volunteer NGO social project evidence. essayQualityScore: clarity 20 plus voice 20 plus structure 20 plus relevance 20 plus examples 20. overallScore = round(academic x 0.30 + leadership x 0.25 + community x 0.25 + essay x 0.20). STAGE 4 FRAUD DETECTION: Critical flags that alone cause High risk: name mismatch between applicantName and extracted document names, impossible GPA such as 4.5 on a 4.0 scale, institution inconsistency between stated and document headers. Medium flags where 3 or more cause High and 1-2 cause Medium: generic AI-pattern essay with no personal details, documents blank or OCR-failed. Set fraudRiskLevel to Low, Medium, or High. List all flags in fraudRiskReason. If High, prepend HIGH FRAUD RISK ALERT to reviewerSummary. STAGE 5 SCHOLARSHIP MATCHING: Trigger only if eligibilityStatus is Not Eligible or overallScore is below 60. Match from catalog: STEM Excellence Award minGpa 3.5 STEM degrees any country 15000/yr, Community Leaders Fund minGpa 3.0 community service developing nations 10000/yr, Global Diversity Scholarship minGpa 2.5 underrepresented countries 8000/yr, First Generation Scholar Grant minGpa 2.8 first-gen 12000/yr, Research Innovation Award minGpa 3.7 research required graduate 20000/yr, Women in Technology Grant minGpa 3.2 STEM female 10000/yr, Emerging Leaders Scholarship minGpa 3.0 leadership ages 18-25 7500/yr. Return a native array of objects, each with name (string), match_percentage (number 0-100), and match_reason (string). Return empty array [] if not triggered. STAGE 6 REVIEWER SUMMARY: Write 200-300 professional words for the human review panel covering: applicant overview, academic standing, key strengths with evidence, concerns, fraud risk with HIGH FRAUD RISK ALERT if applicable, score rationale, and recommendation with confidence level High, Medium, or Low Confidence. STAGE 7 NOTIFICATION: Draft professional warm email. Subject: GrantFlow AI -- Your APPLICATION_NAME Application Update. Approve: warm congratulations, next steps, timeline. Reject: empathetic, no scores, list 2-3 matched alternatives. Request More Info: specific missing items and submission instructions with deadline. OUTPUT CONTRACT: Populate ALL 14 output fields. eligibilityStatus: Eligible or Not Eligible or Needs Manual Review. fraudRiskLevel: Low or Medium or High. recommendedDecision: Approve when Eligible and score 70 or above and not High fraud, Request More Info when Needs Manual Review or missing critical docs, Reject when Not Eligible and score below 50. applicationId format: GF- plus first 3 chars university UPPERCASE plus -YYYYMMDD- plus 4-digit random such as GF-UNI-20260626-0042. All 5 score fields as integer numbers 0-100 (e.g. 78). matchedScholarships as an array of objects each with name (string), match_percentage (number 0-100), and match_reason (string); return empty array [] if not triggered. QUALITY: Every decision needs a reason. Merit-based no bias. Concrete fraud evidence only. Frame all output as AI recommendations with humans having final authority. If tool calls fail, note failures and continue.",
+      "contentTokens": [{"type": "simpleText","rawString": "You are GrantFlow AI, an autonomous scholarship application processing platform. For every application, execute ALL 7 pipeline stages and populate ALL 14 output fields. STAGE 1 DOCUMENT VERIFICATION: If no document files have been attached, skip this entire stage and write No documents provided in reviewerSummary, then proceed to Stage 2. Only execute this stage when file attachments with valid IDs are present. STAGE 2 ELIGIBILITY ASSESSMENT: Parse scholarshipCriteria JSON. Check minGpa (normalize GPA: divide numerator by denominator times 4.0), eligibleCountries (Any means all qualify), eligibleDegrees (partial match OK), and all other criteria. Set eligibilityStatus to Eligible, Not Eligible, or Needs Manual Review. For Not Eligible always name the exact failing criterion in eligibilityReason. Use Needs Manual Review for ambiguous or borderline cases. STAGE 3 SCORING (all scores as integer numbers 0-100): academicScore uses GPA benchmarks 4.0=100 3.7=90 3.5=80 3.0=65 2.5=45 below 2.0=20 plus up to 15 bonus for honours or publications. leadershipScore: 0=no evidence 30=role mentioned 60=role with context 80=measurable impact 100=exceptional outcomes. communityImpactScore: same rubric as leadership based on volunteer NGO social project evidence. essayQualityScore: clarity 20 plus voice 20 plus structure 20 plus relevance 20 plus examples 20. overallScore = round(academic x 0.30 + leadership x 0.25 + community x 0.25 + essay x 0.20). STAGE 4 FRAUD DETECTION: Critical flags that alone cause High risk: name mismatch between applicantName and extracted document names, impossible GPA such as 4.5 on a 4.0 scale, institution inconsistency between stated and document headers. Medium flags where 3 or more cause High and 1-2 cause Medium: generic AI-pattern essay with no personal details, documents blank or OCR-failed. Set fraudRiskLevel to Low, Medium, or High. List all flags in fraudRiskReason. If High, prepend HIGH FRAUD RISK ALERT to reviewerSummary. STAGE 5 SCHOLARSHIP MATCHING: Trigger only if eligibilityStatus is Not Eligible or overallScore is below 60. Match from catalog: STEM Excellence Award minGpa 3.5 STEM degrees any country 15000/yr, Community Leaders Fund minGpa 3.0 community service developing nations 10000/yr, Global Diversity Scholarship minGpa 2.5 underrepresented countries 8000/yr, First Generation Scholar Grant minGpa 2.8 first-gen 12000/yr, Research Innovation Award minGpa 3.7 research required graduate 20000/yr, Women in Technology Grant minGpa 3.2 STEM female 10000/yr, Emerging Leaders Scholarship minGpa 3.0 leadership ages 18-25 7500/yr. Return a native array of objects, each with name (string), match_percentage (number 0-100), and match_reason (string). Return empty array [] if not triggered. STAGE 6 REVIEWER SUMMARY: Write 200-300 professional words for the human review panel covering: applicant overview, academic standing, key strengths with evidence, concerns, fraud risk with HIGH FRAUD RISK ALERT if applicable, score rationale, and recommendation with confidence level High, Medium, or Low Confidence. STAGE 7 NOTIFICATION: Draft professional warm email. Subject: GrantFlow AI -- Your APPLICATION_NAME Application Update. Approve: warm congratulations, next steps, timeline. Reject: empathetic, no scores, list 2-3 matched alternatives. Request More Info: specific missing items and submission instructions with deadline. OUTPUT CONTRACT: Populate ALL 14 output fields. eligibilityStatus: Eligible or Not Eligible or Needs Manual Review. fraudRiskLevel: Low or Medium or High. recommendedDecision: Approve when Eligible and score 70 or above and not High fraud, Request More Info when Needs Manual Review or missing critical docs, Reject when Not Eligible and score below 50. applicationId format: GF- plus first 3 chars university UPPERCASE plus -YYYYMMDD- plus 4-digit random such as GF-UNI-20260626-0042. All 5 score fields as integer numbers 0-100 (e.g. 78). matchedScholarships as an array of objects each with name (string), match_percentage (number 0-100), and match_reason (string); return empty array [] if not triggered. QUALITY: Every decision needs a reason. Merit-based no bias. Concrete fraud evidence only. Frame all output as AI recommendations with humans having final authority. If tool calls fail, note failures and continue."}]
+    },
+    {
+      "role": "user",
+      "content": "Process scholarship application. Scholarship: {{input.scholarshipName}}. Applicant: {{input.applicantName}}. Email: {{input.email}}. Phone: {{input.phoneNumber}}. Country: {{input.country}}. University: {{input.university}}. Degree: {{input.degreeProgram}}. GPA: {{input.gpa}}. Statement: {{input.personalStatement}}. Criteria: {{input.scholarshipCriteria}}. Execute all 7 stages and populate all 14 output fields.",
+      "contentTokens": [
+        {"type": "simpleText","rawString": "Process scholarship application. Scholarship: "},
+        {"type": "variable","rawString": "input.scholarshipName"},
+        {"type": "simpleText","rawString": ". Applicant: "},
+        {"type": "variable","rawString": "input.applicantName"},
+        {"type": "simpleText","rawString": ". Email: "},
+        {"type": "variable","rawString": "input.email"},
+        {"type": "simpleText","rawString": ". Phone: "},
+        {"type": "variable","rawString": "input.phoneNumber"},
+        {"type": "simpleText","rawString": ". Country: "},
+        {"type": "variable","rawString": "input.country"},
+        {"type": "simpleText","rawString": ". University: "},
+        {"type": "variable","rawString": "input.university"},
+        {"type": "simpleText","rawString": ". Degree: "},
+        {"type": "variable","rawString": "input.degreeProgram"},
+        {"type": "simpleText","rawString": ". GPA: "},
+        {"type": "variable","rawString": "input.gpa"},
+        {"type": "simpleText","rawString": ". Statement: "},
+        {"type": "variable","rawString": "input.personalStatement"},
+        {"type": "simpleText","rawString": ". Criteria: "},
+        {"type": "variable","rawString": "input.scholarshipCriteria"},
+        {"type": "simpleText","rawString": ". Execute all 7 stages and populate all 14 output fields."}
+      ]
+    }
+  ]
+}
+</pre>
+<pre data-path="GrantFlow-AI/agent/entry-points.json">{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "$id": "entry-points.json",
+  "entryPoints": [{
+    "filePath": "/content/agent.json",
+    "uniqueId": "4e593910-c527-4e6e-b7b4-57d586f3da0b",
+    "type": "agent",
+    "input": {
+      "type": "object",
+      "properties": {
+        "applicantName": {"type":"string","description":"Full name of the scholarship applicant"},
+        "email": {"type":"string","description":"Applicant email address"},
+        "phoneNumber": {"type":"string","description":"Applicant phone number (optional)"},
+        "country": {"type":"string","description":"Applicant country of residence or citizenship"},
+        "university": {"type":"string","description":"University name the applicant attends"},
+        "degreeProgram": {"type":"string","description":"Degree program (e.g. Computer Science, Medicine)"},
+        "gpa": {"type":"string","description":"GPA and scale (e.g. 3.8/4.0 or 4.5/5.0 or 8.5/10)"},
+        "personalStatement": {"type":"string","description":"Applicant personal statement or essay text"},
+        "scholarshipName": {"type":"string","description":"Name of the scholarship being applied for"},
+        "scholarshipCriteria": {"type":"string","description":"JSON string of scholarship eligibility criteria"},
+        "academicTranscript": {"$ref":"#/definitions/job-attachment","description":"Academic transcript document (PDF)"},
+        "nationalId": {"$ref":"#/definitions/job-attachment","description":"National ID or passport document"},
+        "cv": {"$ref":"#/definitions/job-attachment","description":"CV or Resume document (PDF)"},
+        "recommendationLetter": {"$ref":"#/definitions/job-attachment","description":"Recommendation letter from professor or employer"}
+      },
+      "required": ["applicantName","email","country","university","degreeProgram","gpa","personalStatement","scholarshipName","scholarshipCriteria"],
+      "definitions": {
+        "job-attachment": {"type":"object","properties":{"ID":{"type":"string","description":"Orchestrator attachment key"},"FullName":{"type":"string","description":"File name"},"MimeType":{"type":"string","description":"MIME type"},"Metadata":{"type":"object","additionalProperties":{"type":"string"}}},"required":["ID"],"x-uipath-resource-kind":"JobAttachment"}
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "applicationId": {"type":"string"},"eligibilityStatus": {"type":"string"},"eligibilityReason": {"type":"string"},
+        "academicScore": {"type":"number"},"leadershipScore": {"type":"number"},"communityImpactScore": {"type":"number"},
+        "essayQualityScore": {"type":"number"},"overallScore": {"type":"number"},"fraudRiskLevel": {"type":"string"},
+        "fraudRiskReason": {"type":"string"},"matchedScholarships": {"type":"array","items":{"type":"object","properties":{"name":{"type":"string"},"match_percentage":{"type":"number"},"match_reason":{"type":"string"}}}},
+        "reviewerSummary": {"type":"string"},"recommendedDecision": {"type":"string"},"notificationMessage": {"type":"string"}
+      }
+    }
+  }]
+}
+</pre>
+<pre data-path="GrantFlow-AI/agent/resources/analyze-files/resource.json">{
+  "$resourceType": "tool","referenceKey": null,"name": "Analyze Files/","type": "internal",
+  "description": "Analyze one or more files with an LLM to extract, synthesize, or answer queries about their content.",
+  "isEnabled": true,
+  "inputSchema": {"type":"object","properties":{"attachments":{"type":"array","items":{"$ref":"#/definitions/job-attachment"},"description":"Array of files to process"},"analysisTask":{"type":"string","description":"The task or instruction for processing the files"}},"required":["attachments","analysisTask"],"definitions":{"job-attachment":{"type":"object","properties":{"ID":{"type":"string"},"FullName":{"type":"string"},"MimeType":{"type":"string"},"Metadata":{"type":"object","additionalProperties":{"type":"string"}}},"required":["ID"],"x-uipath-resource-kind":"JobAttachment"}}},
+  "outputSchema": {"type":"object","properties":{"analysis":{"type":"string","description":"Analysis result of the attachments"}},"required":["analysis"]},
+  "settings": {},"guardrail": {"policies": []},"argumentProperties": {},
+  "properties": {"toolType": "analyze-attachments"},
+  "id": "11e9f1d8-59b6-4269-84e3-afd06b8c51c3"
+}
+</pre>
+<pre data-path="GrantFlow-AI/agent/resources/deeprag/resource.json">{
+  "$resourceType": "tool","referenceKey": null,"name": "DeepRAG/","type": "internal",
+  "description": "Get comprehensive synthesis across up to 1,000 pages with citations.",
+  "isEnabled": true,
+  "inputSchema": {"type":"object","properties":{"attachment":{"$ref":"#/definitions/job-attachment","title":"Source","description":"File or document to analyze with DeepRAG"}},"required":["attachment"],"definitions":{"job-attachment":{"type":"object","properties":{"ID":{"type":"string"},"FullName":{"type":"string"},"MimeType":{"type":"string"},"Metadata":{"type":"object","additionalProperties":{"type":"string"}}},"required":["ID"],"x-uipath-resource-kind":"JobAttachment"}}},
+  "outputSchema": {"type":"array","items":{"type":"object","properties":{"content":{"type":"string"}}},"properties":{}},
+  "settings": {},"guardrail": {"policies": []},"argumentProperties": {},
+  "properties": {"toolType":"deep-rag","settings":{"contextType":"attachments","query":{"variant":"static","value":"Extract the student's full name, university, degree program, GPA, graduation year, and any academic honors. Flag any anomalies such as inconsistencies, missing information, or suspicious alterations."},"folderPathPrefix":{"variant":"static"},"citationMode":{"value":"Inline"},"fileExtension":{"value":"pdf"}}},
+  "id": "fdd89b5b-f130-4db6-ab13-40d5c31531f6"
+}
+</pre>
+<pre data-path="GrantFlow-AI/README.md"># GrantFlow AI — Scholarship &amp; Student Financial Aid Processing Platform
+
+> **UiPath AgentHack 2026 — Track 1: UiPath Maestro Case**
+> Agentic AI platform for end-to-end scholarship application processing
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](LICENSE)
+[![UiPath Agent Builder](https://img.shields.io/badge/UiPath-Agent%20Builder-orange)](https://docs.uipath.com/studio-web)
+[![Track](https://img.shields.io/badge/Track-Maestro%20Case-blue)](https://github.com/kida256-glitch/GrantFlow-AI)
+
+---
+
+## Agent Type
+
+> **This solution uses a LOW-CODE AGENT built with UiPath Agent Builder (Studio Web).**
+
+GrantFlow AI is built entirely as a **low-code autonomous agent** using UiPath Agent Builder — no Python, no custom code, no local development environment required. The agent is configured through `agent.json` (editable via Studio Web's visual interface) and two built-in tools: **Analyze Files** and **DeepRAG**.
+
+---
+
+## What GrantFlow AI Does
+
+Scholarship providers receive thousands of applications each year. Most reviews are manual — slow, inconsistent, and prone to fraud. GrantFlow AI automates the entire evaluation pipeline through 7 AI-powered stages:
+
+| Stage | Description | Output |
+|-------|-------------|--------|
+| 1 | **Document Verification** | OCR-based extraction and anomaly detection |
+| 2 | **Eligibility Assessment** | Rules-based criteria check (GPA, country, degree) |
+| 3 | **AI Scoring** | 4-dimensional LLM scoring (academic, leadership, community, essay) |
+| 4 | **Fraud Detection** | Anomaly and consistency analysis — Low / Medium / High risk |
+| 5 | **Scholarship Matching** | Recommends alternative scholarships when rejected |
+| 6 | **Reviewer Summary** | AI-generated 200–300 word summary for the human review panel |
+| 7 | **Applicant Notification** | Professional email draft (approve / reject / request more info) |
+
+**Key differentiator — Scholarship Match Agent:** Applicants who are rejected never receive only a rejection. GrantFlow AI searches a catalog of 10 scholarships and returns ranked alternatives with match percentages.
+
+**Measurable impact:**
+- Reduces processing time from days to **under 60 seconds**
+- Handles **document verification, fraud detection, and scholarship matching** in a single agent run
+- Humans remain responsible for all final decisions (HITL architecture)
+
+---
+
+## UiPath Components Used
+
+| Component | Role in GrantFlow AI |
+|-----------|---------------------|
+| **UiPath Agent Builder (Studio Web)** | Builds and hosts the low-code autonomous agent |
+| **UiPath Orchestrator** | Runs and monitors agent jobs |
+| **Analyze Files (built-in tool)** | Reads and extracts information from uploaded documents |
+| **DeepRAG (built-in tool)** | Deep synthesis across multi-page PDF transcripts |
+| **UiPath Maestro (Case Management)** | Tracks each application as a case through 11-stage lifecycle |
+| **UiPath LLM Gateway** | Routes LLM calls to `anthropic.claude-sonnet-4-6` |
+| **UiPath Automation Cloud** | Hosts the entire solution |
+
+---
+
+## Prerequisites
+
+- **UiPath Automation Cloud account** — Free trial at [cloud.uipath.com](https://cloud.uipath.com)
+- **Studio Web access** — Enabled on your tenant
+- **LLM access** — `anthropic.claude-sonnet-4-6` available on your tenant
+- **No local installation required** — Runs entirely in the cloud
+- **No coding environment required** — Low-code agent
+
+---
+
+## Setup Instructions
+
+### Step 1 — Open in Studio Web
+1. Log in to [cloud.uipath.com](https://cloud.uipath.com)
+2. Go to **Studio Web**
+3. Open the **GrantFlow AI** solution
+4. Navigate to the `Agent` project
+
+### Step 2 — Add Built-In Tools
+
+From the Agent Builder canvas, click **+ Add Tool** and add:
+
+| Tool | Display Name | Purpose |
+|------|--------------|---------|
+| `analyze-attachments` | Analyze Files | Document content extraction |
+| `deep-rag` | DeepRAG | Deep PDF synthesis |
+
+### Step 3 — Verify the Agent
+
+```bash
+uip agent validate /solution/Agent --output json
+```
+
+Expected: `"Status": "Valid"`, `"Resources": 2`
+
+### Step 4 — Run Your First Test
+
+Use the **Run** button in Studio Web with this test case:
+
+```json
+{
+  "applicantName": "Amara Osei",
+  "email": "amara.osei@ug.edu.gh",
+  "country": "Ghana",
+  "university": "University of Ghana",
+  "degreeProgram": "Computer Science",
+  "gpa": "3.8/4.0",
+  "personalStatement": "Growing up in Accra, I taught myself Python at 14 and built a mobile app helping 200 local market traders. I founded Code4Africa, training 180 students in programming.",
+  "scholarshipName": "STEM Excellence Award",
+  "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\"]}"
+}
+```
+
+**Expected result:** `eligibilityStatus: Eligible` · `overallScore: ~85` · `fraudRiskLevel: Low` · `recommendedDecision: Approve`
+
+---
+
+## Project Structure
+
+```
+GrantFlow-AI/
+├── README.md
+├── ARCHITECTURE.md
+├── DEMO_SCRIPT.md
+├── SETUP_GUIDE.md
+├── agent/
+│   ├── agent.json
+│   ├── entry-points.json
+│   ├── project.uiproj
+│   └── resources/
+│       ├── analyze-files/resource.json
+│       └── deeprag/resource.json
+└── data/
+    ├── scholarship_database.json
+    ├── sample_applicants.json
+    └── email_templates.json
+```
+
+---
+
+## Agent Configuration
+
+| Setting | Value |
+|---------|-------|
+| Type | Low-Code Autonomous Agent |
+| Model | `anthropic.claude-sonnet-4-6` |
+| Engine | `basic-v2` |
+| Max Iterations | 25 |
+| Max Tokens | 64,000 |
+| Temperature | 0 |
+
+---
+
+## Scholarship Catalog (10 scholarships)
+
+| Scholarship | Min GPA | Award | Eligibility |
+|-------------|---------|-------|-------------|
+| STEM Excellence Award | 3.5 | $15,000/yr | STEM degrees, any country |
+| Community Leaders Fund | 3.0 | $10,000/yr | Community service, developing nations |
+| Global Diversity Scholarship | 2.5 | $8,000/yr | Underrepresented countries |
+| First Generation Scholar Grant | 2.8 | $12,000/yr | First-generation students |
+| Research Innovation Award | 3.7 | $20,000/yr | Graduate researchers |
+| Women in Technology Grant | 3.2 | $10,000/yr | Women in STEM |
+| Emerging Leaders Scholarship | 3.0 | $7,500/yr | Leadership, ages 18–25 |
+| Global Health Innovation Fellowship | 3.4 | $18,000/yr | Healthcare degrees |
+| Clean Energy Scholarship | 3.3 | $14,000/yr | Sustainability focus |
+| Business Innovation Grant | 3.1 | $9,000/yr | Business degrees |
+
+---
+
+## License
+
+MIT License — Copyright (c) 2026 Benjamin Wakida
+
+*Built for UiPath AgentHack 2026 — Track 1: UiPath Maestro Case*
+</pre>
+<pre data-path="GrantFlow-AI/ARCHITECTURE.md"># GrantFlow AI — Architecture Overview
+
+## System Architecture
+
+```mermaid
+flowchart TD
+    A["Student Portal"] --> B["GrantFlow AI\nLow-Code Autonomous Agent"]
+    B --> C1["Stage 1\nDocument Verification\nAnalyze Files + DeepRAG"]
+    B --> C2["Stage 2\nEligibility Assessment\nRules Engine"]
+    B --> C3["Stage 3\nAI Scoring\n4 Dimensions"]
+    B --> C4["Stage 4\nFraud Detection\nAnomaly Analysis"]
+    B --> C5["Stage 5\nScholarship Matching\nCatalog Search"]
+    B --> C6["Stage 6\nReviewer Summary\n200-300 words"]
+    B --> C7["Stage 7\nNotification Draft\nEmail Template"]
+    C1 --> D["14-Field Structured\nEvaluation Report"]
+    C2 --> D
+    C3 --> D
+    C4 --> D
+    C5 --> D
+    C6 --> D
+    C7 --> D
+    D --> E["Human Review Panel\nApprove / Reject / Request Info"]
+    E --> F["UiPath Maestro Case\nLifecycle Tracking + Audit"]
+    F --> G["Applicant Notification\nEmail Dispatch"]
+```
+
+---
+
+## Component Breakdown
+
+### Agent Layer
+
+| Property | Value |
+|----------|-------|
+| Type | UiPath Low-Code Autonomous Agent |
+| Model | anthropic.claude-sonnet-4-6 |
+| Engine | basic-v2 |
+| Max Iterations | 25 |
+| Tools | Analyze Files, DeepRAG |
+
+### Built-In Tools
+
+| Tool | ID | Purpose |
+|------|-----|---------|
+| Analyze Files | analyze-attachments | OCR + data extraction from PDFs |
+| DeepRAG | deep-rag | Deep synthesis of long documents with citations |
+
+### Input Schema (13 fields)
+
+**Text Inputs (9 required):** applicantName, email, country, university, degreeProgram, gpa, personalStatement, scholarshipName, scholarshipCriteria
+
+**Optional:** phoneNumber
+
+**File Inputs (4, optional):** academicTranscript, nationalId, cv, recommendationLetter (all job-attachment type)
+
+### Output Schema (14 fields)
+
+**Structured Decisions:**
+- `applicationId` — GF-UNI-YYYYMMDD-XXXX format
+- `eligibilityStatus` — Eligible | Not Eligible | Needs Manual Review
+- `fraudRiskLevel` — Low | Medium | High
+- `recommendedDecision` — Approve | Reject | Request More Info
+
+**Scores (number, 0-100):**
+- `academicScore`, `leadershipScore`, `communityImpactScore`, `essayQualityScore`, `overallScore`
+
+**Text Outputs:**
+- `eligibilityReason`, `fraudRiskReason`, `matchedScholarships` (array), `reviewerSummary`, `notificationMessage`
+
+---
+
+## Decision Flow
+
+```mermaid
+flowchart TD
+    A["Application Received"] --> B{"Eligibility Check"}
+    B -->|"Not Eligible"| C["Score Application"]
+    B -->|"Eligible"| C
+    B -->|"Needs Manual Review"| D["Request More Info"]
+    C --> E{"Overall Score"}
+    E -->|"Score >= 70"| F{"Fraud Check"}
+    E -->|"Score < 60"| G["Run Scholarship Match"]
+    F -->|"Low/Medium Risk"| H["APPROVE"]
+    F -->|"High Risk"| I["Escalate to Human"]
+    G --> J["REJECT + Recommendations"]
+```
+
+---
+
+## Fraud Detection Matrix
+
+| Flag | Severity | Alone causes High? |
+|------|----------|-------------------|
+| Name mismatch (form vs document) | Critical | Yes |
+| Impossible GPA value | Critical | Yes |
+| Institution/degree inconsistency | Critical | Yes |
+| Generic/AI-pattern essay | Minor | No (need 3+) |
+| OCR failure / blank document | Minor | No (need 3+) |
+
+---
+
+## Scoring Weights
+
+| Dimension | Weight | Max Score |
+|-----------|--------|-----------|
+| Academic (GPA) | 30% | 100 |
+| Leadership | 25% | 100 |
+| Community Impact | 25% | 100 |
+| Essay Quality | 20% | 100 |
+| **Overall** | **100%** | **100** |
+
+**Formula:** `round(academic x 0.30 + leadership x 0.25 + community x 0.25 + essay x 0.20)`
+
+---
+
+## Case Lifecycle (Maestro Integration)
+
+```mermaid
+stateDiagram-v2
+    [*] --> ApplicationSubmitted
+    ApplicationSubmitted --> DocumentVerification
+    DocumentVerification --> MissingDocuments: Docs incomplete
+    DocumentVerification --> EligibilityCheck: Docs OK
+    MissingDocuments --> DocumentVerification: Docs received
+    EligibilityCheck --> AIScoring: Eligible
+    EligibilityCheck --> ScholarshipMatch: Not Eligible
+    EligibilityCheck --> HumanReview: Borderline
+    AIScoring --> FraudDetection
+    FraudDetection --> HumanReview: High Risk
+    FraudDetection --> GenerateReport: Low/Medium
+    GenerateReport --> HumanReview
+    ScholarshipMatch --> Rejected: Alternatives sent
+    HumanReview --> Approved: Human Approve
+    HumanReview --> Rejected: Human Reject
+    HumanReview --> DocumentVerification: Request More
+    Approved --> NotificationSent
+    Rejected --> NotificationSent
+    NotificationSent --> [*]
+```
+
+---
+
+## Key Design Principles
+
+1. **Humans in control** — AI recommends, humans decide.
+2. **Explainability** — Every score includes rationale. Every decision includes a reason.
+3. **Fail-safe** — Tool call failures are caught; evaluation continues with available data.
+4. **Fairness** — Merit-based evaluation only. Fraud flags require concrete evidence.
+5. **No student left behind** — Rejected applicants always receive scholarship alternatives.
+</pre>
+<pre data-path="GrantFlow-AI/DEMO_SCRIPT.md"># GrantFlow AI — 5-Minute Demo Script
+## UiPath AgentHack 2026 | Track 1: Maestro Case
+
+---
+
+## Setup Checklist (Before Demo)
+- [ ] Studio Web open at `/solution/Agent`
+- [ ] Agent canvas visible with GrantFlow AI loaded
+- [ ] `sample_applicants.json` open in a text editor (for copy-paste)
+- [ ] Browser tab with UiPath Automation Cloud ready
+
+---
+
+## MINUTE 0:00 – 0:45 | The Hook (Problem Statement)
+
+> *"Every year, scholarship providers receive thousands of applications. Each one is reviewed manually — taking weeks, introducing bias, missing fraud, and worst of all: rejecting qualified students without telling them there are OTHER scholarships they could win. GrantFlow AI changes all of that."*
+
+**Show:** The agent.json canvas in Studio Web.
+
+> *"This is GrantFlow AI — a single autonomous agent built on UiPath that replaces an entire manual review committee. It runs seven specialized stages in sequence, each one powered by AI, each one auditable."*
+
+---
+
+## MINUTE 0:45 – 1:30 | Architecture Overview
+
+Walk through the pipeline quickly:
+1. **Stage 1** — "It reads the documents using UiPath's built-in Analyze Files tool."
+2. **Stage 2** — "It checks eligibility against the scholarship rules."
+3. **Stage 3** — "It scores the application across four dimensions."
+4. **Stage 4** — "It runs fraud detection."
+5. **Stage 5** — "Here's the differentiator: if rejected, it recommends alternatives."
+6. **Stage 6** — "It writes a professional reviewer summary."
+7. **Stage 7** — "It drafts the applicant's email."
+
+---
+
+## MINUTE 1:30 – 2:30 | Demo Path 1 — APPROVE (Strong Applicant)
+
+**Input:** Amara Osei, Ghana, Computer Science, GPA 3.8/4.0
+
+```json
+{
+  "applicantName": "Amara Osei",
+  "email": "amara.osei@university.edu",
+  "country": "Ghana",
+  "university": "University of Ghana",
+  "degreeProgram": "Computer Science",
+  "gpa": "3.8/4.0",
+  "scholarshipName": "STEM Excellence Award",
+  "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\"]}",
+  "personalStatement": "Growing up in Accra, I taught myself Python at 14. I founded Code4Africa, training 180 students in programming. My AI research was presented at the African AI Symposium 2026."
+}
+```
+
+**Show output:**
+> *"Eligibility: Eligible. Scores: Academic 92, Leadership 80, Community 85, Essay 88. Overall: 86. Fraud: Low. Decision: APPROVE."*
+
+**Point out:** "This took 15 seconds. A human reviewer would take 2-3 days."
+
+---
+
+## MINUTE 2:30 – 3:15 | Demo Path 2 — SCHOLARSHIP MATCH (Rejected + Redirected)
+
+**Input:** Priya Sharma, India, Mechanical Engineering, GPA 3.2/4.0, applying for Research Innovation Award (requires 3.7 GPA).
+
+> *"Watch what happens when someone is rejected..."*
+
+**Show output:**
+> *"Not Eligible — GPA 3.2 does not meet the 3.7 minimum."*
+
+> *"But the agent doesn't just say NO. It found three alternatives:"*
+> - *"Women in Technology Grant — 91% match."*
+> - *"STEM Excellence Award — 78% match."*
+> - *"Emerging Leaders Scholarship — 74% match."*
+
+> *"The applicant receives a warm email with these alternatives. She never gets only a rejection."*
+
+---
+
+## MINUTE 3:15 – 3:45 | Demo Path 3 — FRAUD DETECTION (30 seconds)
+
+**Input:** GPA 4.8/4.0 (impossible), generic AI-written essay, no personal details.
+
+**Show output:**
+> *"HIGH FRAUD RISK ALERT — Impossible GPA of 4.8 on a 4.0 scale. Generic personal statement with no personal anecdotes. Decision: Request More Info — escalated to human review."*
+
+---
+
+## MINUTE 3:45 – 4:30 | Human-in-the-Loop + Governance
+
+> *"Every output from GrantFlow AI is a RECOMMENDATION — not a verdict."*
+
+**Key points:**
+- AI recommends, humans decide
+- Every stage is traceable
+- Escalation built into the workflow
+- Appeals and overrides are tracked
+
+---
+
+## MINUTE 4:30 – 5:00 | Impact
+
+| Metric | Manual Process | GrantFlow AI |
+|--------|---------------|--------------|
+| Review time | 2-3 days | 15-30 seconds |
+| Consistency | Varies by reviewer | 100% consistent |
+| Fraud detection | ~60% | Systematic 7-flag check |
+| Rejection with guidance | Rarely | Always |
+
+> *"GrantFlow AI doesn't replace human judgment — it amplifies it."*
+> *"One agent. Seven stages. Zero students left behind."*
+
+---
+
+## Q&amp;A Prep
+
+**Q: How do you prevent the AI from being wrong?**
+> Human reviewers have final authority. Every override is logged.
+
+**Q: How does this scale to 10,000 applications?**
+> UiPath Orchestrator handles parallel agent execution.
+
+**Q: Can the matching catalog be customized?**
+> Yes — the catalog is defined in `scholarship_database.json` and can be extended.
+</pre>
+<pre data-path="GrantFlow-AI/SETUP_GUIDE.md"># GrantFlow AI — Setup Guide
+
+## Adding Built-In Tools (2 minutes)
+
+### Step 1: Open the Agent Canvas
+1. Open Studio Web
+2. Navigate to `/solution/Agent`
+3. The GrantFlow AI agent canvas will open
+
+### Step 2: Add Analyze Files Tool
+1. Click **"+ Add Tool"** on the canvas
+2. Select **"Analyze Files"** from the built-in tools list
+3. The tool appears with `toolType: analyze-attachments`
+
+### Step 3: Add DeepRAG Tool
+1. Click **"+ Add Tool"** again
+2. Select **"DeepRAG"** from the built-in tools list
+3. The tool appears with `toolType: deep-rag`
+
+### Step 4: Save and Validate
+Click **Save** — the tools are now wired and the agent is ready to run.
+
+---
+
+## What Each Tool Does
+
+### Analyze Files (analyze-attachments)
+Used in **Stage 1 — Document Verification**
+
+When a user submits documents, the agent calls this tool with:
+```json
+{
+  "attachments": [{ "ID": "...", "FullName": "transcript.pdf" }],
+  "analysisTask": "Extract student name, university, degree program, GPA, graduation year. Flag anomalies."
+}
+```
+
+### DeepRAG (deep-rag)
+Used for **deep synthesis** of long documents (50+ page transcripts)
+
+Returns an array of cited content chunks for comprehensive analysis.
+
+---
+
+## Running Your First Test
+
+### Option A: Quick Text-Only Test (no documents)
+```json
+{
+  "applicantName": "Amara Osei",
+  "email": "amara.osei@university.edu",
+  "country": "Ghana",
+  "university": "University of Ghana",
+  "degreeProgram": "Computer Science",
+  "gpa": "3.8/4.0",
+  "scholarshipName": "STEM Excellence Award",
+  "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\"]}",
+  "personalStatement": "Growing up in Accra, I witnessed firsthand how technology could transform communities..."
+}
+```
+**Expected:** Eligible, Low fraud, Approve, overall score 85-95.
+
+### Option B: Fraud Detection Test
+Use DEMO-003 — GPA 4.8/4.0 (impossible), generic AI essay.
+**Expected:** HIGH FRAUD RISK ALERT, Request More Info.
+
+### Option C: Scholarship Match Test
+Use DEMO-002 — Priya Sharma, GPA below Research Innovation Award minimum.
+**Expected:** Not Eligible + 3 matched scholarship recommendations.
+
+---
+
+## Environment Variables (Production)
+
+| Variable | Description |
+|----------|-------------|
+| `SCHOLARSHIP_DB_URL` | URL to live scholarship database API |
+| `EMAIL_SERVICE_URL` | SMTP or SendGrid API endpoint |
+| `NOTIFICATION_EMAIL_FROM` | Sender email for applicant notifications |
+| `REVIEW_PORTAL_URL` | URL to human review dashboard |
+
+---
+
+## Maestro Case Integration
+
+1. Create a new Case Management project
+2. Define the case lifecycle stages (see ARCHITECTURE.md state diagram)
+3. Wire the GrantFlow AI agent as a subprocess at each stage
+4. Configure human review tasks at the Human Review stage
+5. Set up escalation rules for High Fraud Risk cases
+</pre>
+<pre data-path="GrantFlow-AI/data/scholarship_database.json">{
+  "version": "1.0.0",
+  "lastUpdated": "2026-06-26",
+  "scholarships": [
+    {
+      "id": "SCH-001",
+      "name": "STEM Excellence Award",
+      "provider": "Global STEM Foundation",
+      "award": 15000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.5, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Computer Science","Engineering","Mathematics","Physics","Biology","Chemistry","Data Science","Artificial Intelligence"],
+        "level": ["undergraduate","graduate"]
+      },
+      "deadline": "2026-10-01",
+      "description": "Awarded to outstanding STEM students with exceptional academic records and innovation potential."
+    },
+    {
+      "id": "SCH-002",
+      "name": "Community Leaders Fund",
+      "provider": "International Development Alliance",
+      "award": 10000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.0, "gpaScale": 4.0,
+        "eligibleCountries": ["Nigeria","Kenya","Ghana","Tanzania","Uganda","Ethiopia","Rwanda","Senegal","Bangladesh","India","Pakistan","Nepal","Cambodia","Vietnam","Philippines","Mexico","Bolivia","Peru","Ecuador","Guatemala"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate","graduate"],
+        "communityServiceRequired": true
+      },
+      "deadline": "2026-09-15",
+      "description": "Supporting future leaders from developing nations who demonstrate exceptional community impact."
+    },
+    {
+      "id": "SCH-003",
+      "name": "Global Diversity Scholarship",
+      "provider": "Unity Education Trust",
+      "award": 8000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 2.5, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate"]
+      },
+      "deadline": "2026-11-01",
+      "description": "Championing diversity in higher education by supporting students from underrepresented backgrounds worldwide."
+    },
+    {
+      "id": "SCH-004",
+      "name": "First Generation Scholar Grant",
+      "provider": "Pathfinders Foundation",
+      "award": 12000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 2.8, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate"],
+        "firstGenerationStudent": true
+      },
+      "deadline": "2026-10-15",
+      "description": "Empowering first-generation university students to achieve their academic dreams."
+    },
+    {
+      "id": "SCH-005",
+      "name": "Research Innovation Award",
+      "provider": "Global Research Council",
+      "award": 20000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.7, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["graduate"],
+        "researchExperienceRequired": true
+      },
+      "deadline": "2026-09-30",
+      "description": "Supporting the next generation of research leaders and innovators in any academic discipline."
+    },
+    {
+      "id": "SCH-006",
+      "name": "Women in Technology Grant",
+      "provider": "Tech Equity Initiative",
+      "award": 10000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.2, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Computer Science","Engineering","Data Science","Cybersecurity","Artificial Intelligence","Information Technology","Electrical Engineering"],
+        "level": ["undergraduate","graduate"],
+        "gender": "female"
+      },
+      "deadline": "2026-10-30",
+      "description": "Closing the gender gap in technology by supporting talented women in STEM."
+    },
+    {
+      "id": "SCH-007",
+      "name": "Emerging Leaders Scholarship",
+      "provider": "Youth Leadership Alliance",
+      "award": 7500,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.0, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate"],
+        "ageRange": { "min": 18, "max": 25 },
+        "leadershipRequired": true
+      },
+      "deadline": "2026-11-15",
+      "description": "Investing in young leaders aged 18-25 who show exceptional promise to make a difference."
+    },
+    {
+      "id": "SCH-008",
+      "name": "Global Health Innovation Fellowship",
+      "provider": "World Health Education Fund",
+      "award": 18000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.4, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Medicine","Public Health","Nursing","Pharmacy","Biomedical Sciences","Global Health"],
+        "level": ["graduate"]
+      },
+      "deadline": "2026-10-01",
+      "description": "Funding the next generation of global health leaders tackling the world's most pressing health challenges."
+    },
+    {
+      "id": "SCH-009",
+      "name": "Clean Energy Scholarship",
+      "provider": "Green Future Foundation",
+      "award": 14000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.3, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Environmental Science","Chemical Engineering","Electrical Engineering","Mechanical Engineering","Renewable Energy","Sustainability"],
+        "level": ["undergraduate","graduate"]
+      },
+      "deadline": "2026-09-20",
+      "description": "Supporting students committed to solving the global energy crisis through innovation."
+    },
+    {
+      "id": "SCH-010",
+      "name": "Business Innovation Grant",
+      "provider": "Entrepreneurship Council",
+      "award": 9000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.1, "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Business Administration","Economics","Finance","Marketing","Entrepreneurship","Management"],
+        "level": ["undergraduate","graduate"]
+      },
+      "deadline": "2026-10-20",
+      "description": "Fueling entrepreneurial talent with funding to turn innovative business ideas into reality."
+    }
+  ]
+}
+</pre>
+<pre data-path="GrantFlow-AI/data/sample_applicants.json">{
+  "version": "1.0.0",
+  "description": "Sample applicants for GrantFlow AI demo — covers all 5 decision branches",
+  "applicants": [
+    {
+      "id": "DEMO-001",
+      "scenario": "APPROVE — Strong eligible applicant with compelling personal story",
+      "input": {
+        "applicantName": "Amara Osei",
+        "email": "amara.osei@university.edu",
+        "phoneNumber": "+233-20-123-4567",
+        "country": "Ghana",
+        "university": "University of Ghana",
+        "degreeProgram": "Computer Science",
+        "gpa": "3.8/4.0",
+        "scholarshipName": "STEM Excellence Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Computer Science\", \"Engineering\", \"Mathematics\", \"Data Science\"], \"level\": [\"undergraduate\", \"graduate\"]}",
+        "personalStatement": "Growing up in Accra, I witnessed firsthand how technology could transform communities — or leave them behind. At 14, I taught myself Python by borrowing my neighbor's laptop. By 16, I had built a mobile app that helped 200 local traders track inventory. At the University of Ghana, I maintain a 3.8 GPA while leading our 45-member Computer Science Society, organizing three national hackathons that attracted over 600 participants. I also founded Code4Africa, a volunteer program that has trained 180 high school students in basic programming across three regions. My research on low-bandwidth AI models for rural connectivity was presented at the African AI Symposium 2025."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Eligible",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Approve",
+        "overallScoreRange": "85-95"
+      }
+    },
+    {
+      "id": "DEMO-002",
+      "scenario": "SCHOLARSHIP MATCH — Ineligible for target, strong for alternatives",
+      "input": {
+        "applicantName": "Priya Sharma",
+        "email": "priya.sharma@iit.ac.in",
+        "phoneNumber": "+91-98765-43210",
+        "country": "India",
+        "university": "IIT Bombay",
+        "degreeProgram": "Mechanical Engineering",
+        "gpa": "3.2/4.0",
+        "scholarshipName": "Research Innovation Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.7, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Any\"], \"level\": [\"graduate\"], \"researchExperienceRequired\": true}",
+        "personalStatement": "Engineering for me has never been about equations — it has been about solving real problems for real people. As the first woman from my village in Rajasthan to attend university, I carry the hopes of my community. I lead the Women in Engineering chapter at IIT Bombay with 120 members, and I have organized workshops reaching 500 female students in local schools. My capstone project designed a low-cost water purification system now deployed in three rural villages."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Not Eligible",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Reject",
+        "matchedScholarshipsNote": "Should recommend: Women in Technology Grant (91%), STEM Excellence Award (78%), Emerging Leaders Scholarship (74%)"
+      }
+    },
+    {
+      "id": "DEMO-003",
+      "scenario": "HIGH FRAUD RISK — Impossible GPA + AI-generated essay",
+      "input": {
+        "applicantName": "John Smith",
+        "email": "johnsmith99@gmail.com",
+        "country": "United States",
+        "university": "State University",
+        "degreeProgram": "Business Administration",
+        "gpa": "4.8/4.0",
+        "scholarshipName": "Community Leaders Fund",
+        "scholarshipCriteria": "{\"minGpa\": 3.0, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Any\"], \"communityServiceRequired\": true}",
+        "personalStatement": "I am a highly motivated student with excellent leadership skills and strong academic performance. I have participated in many extracurricular activities and community service projects. I believe in the importance of education and I am committed to making a positive difference in the world. I have demonstrated leadership in various capacities and I am passionate about making an impact in my field of study."
+      },
+      "expectedOutput": {
+        "fraudRiskLevel": "High",
+        "recommendedDecision": "Request More Info",
+        "reviewerSummaryContains": "HIGH FRAUD RISK ALERT"
+      }
+    },
+    {
+      "id": "DEMO-004",
+      "scenario": "NEEDS MANUAL REVIEW — Borderline GPA, exceptional extracurriculars",
+      "input": {
+        "applicantName": "Fatima Al-Rashidi",
+        "email": "fatima.alrashidi@university.jo",
+        "country": "Jordan",
+        "university": "University of Jordan",
+        "degreeProgram": "Environmental Science",
+        "gpa": "3.48/4.0",
+        "scholarshipName": "STEM Excellence Award",
+        "scholarshipCriteria": "{\"minGpa\": 3.5, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Environmental Science\", \"Engineering\", \"Biology\"], \"level\": [\"undergraduate\", \"graduate\"]}",
+        "personalStatement": "The Dead Sea is dying — its water level drops one meter every year, and I have watched this happen through my childhood window in Aqaba. At the University of Jordan, my GPA of 3.48 reflects a challenging curriculum while balancing three part-time jobs to fund my education. I founded the Jordan Youth Climate Coalition, which successfully lobbied for a national plastic bag ban in 2025. I have published two papers on water conservation and presented at COP30 as a youth delegate."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Needs Manual Review",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Request More Info"
+      }
+    },
+    {
+      "id": "DEMO-005",
+      "scenario": "APPROVE — First-generation student, perfect essay, medical field",
+      "input": {
+        "applicantName": "Carlos Mendoza Rivera",
+        "email": "carlos.mendoza@unam.mx",
+        "country": "Mexico",
+        "university": "UNAM",
+        "degreeProgram": "Medicine",
+        "gpa": "9.1/10",
+        "scholarshipName": "Global Health Innovation Fellowship",
+        "scholarshipCriteria": "{\"minGpa\": 3.4, \"eligibleCountries\": [\"Any\"], \"eligibleDegrees\": [\"Medicine\", \"Public Health\", \"Nursing\", \"Global Health\"], \"level\": [\"graduate\"]}",
+        "personalStatement": "My mother cleaned offices for 22 years so that I could one day wear a white coat. I am the first person in my family to attend university. Returning to UNAM after caring for my father after his stroke, I earned a 9.1/10 GPA while co-founding Medicos por Tepito, a free clinic that has served 2,300 low-income patients in two years. Our mobile vaccination unit reached communities the formal health system had abandoned."
+      },
+      "expectedOutput": {
+        "eligibilityStatus": "Eligible",
+        "fraudRiskLevel": "Low",
+        "recommendedDecision": "Approve",
+        "overallScoreRange": "88-100"
+      }
+    }
+  ],
+  "demoNotes": {
+    "quickDemo": "Use DEMO-001 for a clean Approve path (15-30 seconds)",
+    "fraudDemo": "Use DEMO-003 to show High Fraud Risk detection",
+    "matchDemo": "Use DEMO-002 to showcase the Scholarship Match differentiator",
+    "borderlineDemo": "Use DEMO-004 to show the human-in-the-loop escalation path"
+  }
+}
+</pre>
+<pre data-path="GrantFlow-AI/data/email_templates.json">{
+  "version": "1.0.0",
+  "description": "Professional email templates for GrantFlow AI applicant notifications",
+  "templates": {
+    "application_received": {
+      "subject": "GrantFlow AI — We've Received Your Application for {{scholarshipName}}",
+      "body": "Dear {{applicantName}},\n\nThank you for submitting your application for the {{scholarshipName}}.\n\nYour Application Details:\n• Application ID: {{applicationId}}\n• Scholarship: {{scholarshipName}}\n• University: {{university}}\n• Submitted: {{submissionDate}}\n\nWhat happens next?\n1. Our AI-powered review system will evaluate your application\n2. Your documents will be verified for completeness\n3. A human review panel will make the final decision\n4. You will receive a decision within 5-7 business days\n\nWarm regards,\nThe GrantFlow AI Review Team"
+    },
+    "missing_documents": {
+      "subject": "GrantFlow AI — Action Required: Missing Documents for {{scholarshipName}}",
+      "body": "Dear {{applicantName}},\n\nThank you for applying to the {{scholarshipName}} (Application ID: {{applicationId}}).\n\nDuring our document verification stage, we identified that the following items are missing:\n\n{{missingDocumentsList}}\n\nIMPORTANT: Your application cannot proceed until these documents are received. Please submit them within 14 days.\n\nHow to submit:\n1. Reply to this email with your documents attached\n2. Ensure all PDFs are clearly readable\n3. File names should indicate the document type\n\nWarm regards,\nThe GrantFlow AI Review Team"
+    },
+    "approved": {
+      "subject": "Congratulations! GrantFlow AI — {{scholarshipName}} Award Decision",
+      "body": "Dear {{applicantName}},\n\nCONGRATULATIONS — you have been selected to receive the {{scholarshipName}}!\n\nAward Details:\n• Scholarship: {{scholarshipName}}\n• Award Amount: {{awardAmount}}\n• Application ID: {{applicationId}}\n\nNext Steps — Please complete within 30 days:\n1. Accept your scholarship offer by replying to this email\n2. Submit a copy of your current enrollment verification\n3. Provide your bank account details via the secure form at {{onboardingLink}}\n\nWith congratulations,\nThe {{scholarshipName}} Review Panel\nGrantFlow AI"
+    },
+    "rejected_with_matches": {
+      "subject": "GrantFlow AI — Your {{scholarshipName}} Application Update + New Opportunities",
+      "body": "Dear {{applicantName}},\n\nThank you for your application to the {{scholarshipName}} (Application ID: {{applicationId}}).\n\nAfter careful evaluation, we are unable to offer you the {{scholarshipName}} at this time. {{rejectionReason}}\n\nThis decision reflects the specific criteria of this scholarship, not a reflection of your potential.\n\nWe found scholarships that may be a strong fit for you:\n\n{{matchedScholarshipsList}}\n\nWe strongly encourage you to apply to one or more of these programs.\n\nWith encouragement,\nThe GrantFlow AI Review Team"
+    },
+    "request_more_info": {
+      "subject": "GrantFlow AI — Additional Information Needed for {{scholarshipName}}",
+      "body": "Dear {{applicantName}},\n\nThank you for your application to the {{scholarshipName}} (Application ID: {{applicationId}}).\n\nTo complete our evaluation, we need the following:\n\n{{additionalInfoList}}\n\nPlease respond within 21 days. Response deadline: {{responseDeadline}}\n\nKind regards,\nThe GrantFlow AI Review Team"
+    },
+    "high_risk_escalation": {
+      "subject": "GrantFlow AI — Application Under Additional Review ({{applicationId}})",
+      "body": "Dear {{applicantName}},\n\nYour application to the {{scholarshipName}} (Application ID: {{applicationId}}) has been flagged for additional manual review. This is a standard part of our verification process.\n\nTo assist with our review, please provide within 14 days:\n\n{{verificationRequestList}}\n\nRegards,\nThe GrantFlow AI Verification Team"
+    }
+  },
+  "placeholders": {
+    "{{applicantName}}": "Full name of the applicant",
+    "{{scholarshipName}}": "Name of the scholarship applied for",
+    "{{applicationId}}": "Generated application ID (GF-UNI-YYYYMMDD-XXXX)",
+    "{{university}}": "University name",
+    "{{submissionDate}}": "Date application was submitted",
+    "{{awardAmount}}": "Scholarship award amount",
+    "{{onboardingLink}}": "Secure onboarding portal URL",
+    "{{rejectionReason}}": "Brief explanation of why criteria were not met",
+    "{{matchedScholarshipsList}}": "Formatted list of matched scholarships",
+    "{{missingDocumentsList}}": "Bullet list of missing documents",
+    "{{additionalInfoList}}": "Numbered list of additional information needed",
+    "{{verificationRequestList}}": "List of verification items needed",
+    "{{responseDeadline}}": "Date by which response is required"
+  }
+}
+</pre>
+</body>
+</html>

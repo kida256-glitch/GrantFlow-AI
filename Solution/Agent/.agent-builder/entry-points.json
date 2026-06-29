@@ -1,0 +1,182 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "$id": "entry-points.json",
+  "entryPoints": [
+    {
+      "filePath": "/content/agent.json",
+      "uniqueId": "4e593910-c527-4e6e-b7b4-57d586f3da0b",
+      "type": "agent",
+      "input": {
+        "type": "object",
+        "properties": {
+          "applicantName": {
+            "type": "string",
+            "description": "Full name of the scholarship applicant"
+          },
+          "email": {
+            "type": "string",
+            "description": "Applicant email address"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Applicant phone number (optional)"
+          },
+          "country": {
+            "type": "string",
+            "description": "Applicant country of residence or citizenship"
+          },
+          "university": {
+            "type": "string",
+            "description": "University name the applicant attends"
+          },
+          "degreeProgram": {
+            "type": "string",
+            "description": "Degree program (e.g. Computer Science, Medicine)"
+          },
+          "gpa": {
+            "type": "string",
+            "description": "GPA and scale (e.g. 3.8/4.0 or 4.5/5.0 or 8.5/10)"
+          },
+          "personalStatement": {
+            "type": "string",
+            "description": "Applicant personal statement or essay text"
+          },
+          "scholarshipName": {
+            "type": "string",
+            "description": "Name of the scholarship being applied for"
+          },
+          "scholarshipCriteria": {
+            "type": "string",
+            "description": "JSON string of scholarship eligibility criteria (minGpa, eligibleCountries, eligibleDegrees, etc.)"
+          },
+          "academicTranscript": {
+            "$ref": "#/definitions/job-attachment",
+            "description": "Academic transcript document (PDF)"
+          },
+          "nationalId": {
+            "$ref": "#/definitions/job-attachment",
+            "description": "National ID or passport document"
+          },
+          "cv": {
+            "$ref": "#/definitions/job-attachment",
+            "description": "CV or Resume document (PDF)"
+          },
+          "recommendationLetter": {
+            "$ref": "#/definitions/job-attachment",
+            "description": "Recommendation letter from professor or employer"
+          }
+        },
+        "required": [
+          "applicantName",
+          "email",
+          "country",
+          "university",
+          "degreeProgram",
+          "gpa",
+          "personalStatement",
+          "scholarshipName",
+          "scholarshipCriteria"
+        ],
+        "definitions": {
+          "job-attachment": {
+            "type": "object",
+            "properties": {
+              "ID": {
+                "type": "string",
+                "description": "Orchestrator attachment key"
+              },
+              "FullName": {
+                "type": "string",
+                "description": "File name"
+              },
+              "MimeType": {
+                "type": "string",
+                "description": "MIME type, e.g. application/pdf"
+              },
+              "Metadata": {
+                "type": "object",
+                "description": "Dictionary of string metadata",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "ID"
+            ],
+            "x-uipath-resource-kind": "JobAttachment"
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "applicationId": {
+            "type": "string",
+            "description": "Generated unique application ID in format GF-UNI-YYYYMMDD-XXXX"
+          },
+          "eligibilityStatus": {
+            "type": "string",
+            "description": "Eligible | Not Eligible | Needs Manual Review"
+          },
+          "eligibilityReason": {
+            "type": "string",
+            "description": "Detailed explanation of the eligibility decision"
+          },
+          "academicScore": {
+            "type": "number",
+            "description": "Academic performance score, integer 0-100"
+          },
+          "leadershipScore": {
+            "type": "number",
+            "description": "Leadership and initiative score, integer 0-100"
+          },
+          "communityImpactScore": {
+            "type": "number",
+            "description": "Community service and social impact score, integer 0-100"
+          },
+          "essayQualityScore": {
+            "type": "number",
+            "description": "Personal statement quality score, integer 0-100"
+          },
+          "overallScore": {
+            "type": "number",
+            "description": "Weighted composite score: academic 30% + leadership 25% + community 25% + essay 20%, integer 0-100"
+          },
+          "fraudRiskLevel": {
+            "type": "string",
+            "description": "Low | Medium | High"
+          },
+          "fraudRiskReason": {
+            "type": "string",
+            "description": "Explanation of fraud risk flags or confirmation of clean status"
+          },
+          "matchedScholarships": {
+            "type": "array",
+            "description": "List of alternative scholarship recommendations. Empty array [] if not triggered.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "description": "Scholarship name" },
+                "match_percentage": { "type": "number", "description": "Match score 0-100" },
+                "match_reason": { "type": "string", "description": "Why this scholarship matches the applicant" }
+              }
+            }
+          },
+          "reviewerSummary": {
+            "type": "string",
+            "description": "200-300 word professional summary for the human review panel"
+          },
+          "recommendedDecision": {
+            "type": "string",
+            "description": "Approve | Reject | Request More Info"
+          },
+          "notificationMessage": {
+            "type": "string",
+            "description": "Full professional email notification draft for the applicant"
+          }
+        }
+      }
+    }
+  ]
+}

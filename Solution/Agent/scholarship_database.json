@@ -1,0 +1,182 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-06-26",
+  "scholarships": [
+    {
+      "id": "SCH-001",
+      "name": "STEM Excellence Award",
+      "provider": "Global STEM Foundation",
+      "award": 15000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.5,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Computer Science", "Engineering", "Mathematics", "Physics", "Biology", "Chemistry", "Data Science", "Artificial Intelligence"],
+        "level": ["undergraduate", "graduate"]
+      },
+      "deadline": "2026-10-01",
+      "description": "Awarded to outstanding STEM students with exceptional academic records and innovation potential."
+    },
+    {
+      "id": "SCH-002",
+      "name": "Community Leaders Fund",
+      "provider": "International Development Alliance",
+      "award": 10000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.0,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Nigeria", "Kenya", "Ghana", "Tanzania", "Uganda", "Ethiopia", "Rwanda", "Senegal", "Bangladesh", "India", "Pakistan", "Nepal", "Cambodia", "Vietnam", "Philippines", "Mexico", "Bolivia", "Peru", "Ecuador", "Guatemala"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate", "graduate"],
+        "communityServiceRequired": true
+      },
+      "deadline": "2026-09-15",
+      "description": "Supporting future leaders from developing nations who demonstrate exceptional community impact."
+    },
+    {
+      "id": "SCH-003",
+      "name": "Global Diversity Scholarship",
+      "provider": "Unity Education Trust",
+      "award": 8000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 2.5,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate"]
+      },
+      "deadline": "2026-11-01",
+      "description": "Championing diversity in higher education by supporting students from underrepresented backgrounds worldwide."
+    },
+    {
+      "id": "SCH-004",
+      "name": "First Generation Scholar Grant",
+      "provider": "Pathfinders Foundation",
+      "award": 12000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 2.8,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate"],
+        "firstGenerationStudent": true
+      },
+      "deadline": "2026-10-15",
+      "description": "Empowering first-generation university students to achieve their academic dreams."
+    },
+    {
+      "id": "SCH-005",
+      "name": "Research Innovation Award",
+      "provider": "Global Research Council",
+      "award": 20000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.7,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["graduate"],
+        "researchExperienceRequired": true
+      },
+      "deadline": "2026-09-30",
+      "description": "Supporting the next generation of research leaders and innovators in any academic discipline."
+    },
+    {
+      "id": "SCH-006",
+      "name": "Women in Technology Grant",
+      "provider": "Tech Equity Initiative",
+      "award": 10000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.2,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Computer Science", "Engineering", "Data Science", "Cybersecurity", "Artificial Intelligence", "Information Technology", "Electrical Engineering"],
+        "level": ["undergraduate", "graduate"],
+        "gender": "female"
+      },
+      "deadline": "2026-10-30",
+      "description": "Closing the gender gap in technology by supporting talented women in STEM."
+    },
+    {
+      "id": "SCH-007",
+      "name": "Emerging Leaders Scholarship",
+      "provider": "Youth Leadership Alliance",
+      "award": 7500,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.0,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Any"],
+        "level": ["undergraduate"],
+        "ageRange": { "min": 18, "max": 25 },
+        "leadershipRequired": true
+      },
+      "deadline": "2026-11-15",
+      "description": "Investing in young leaders aged 18-25 who show exceptional promise to make a difference."
+    },
+    {
+      "id": "SCH-008",
+      "name": "Global Health Innovation Fellowship",
+      "provider": "World Health Education Fund",
+      "award": 18000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.4,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Medicine", "Public Health", "Nursing", "Pharmacy", "Biomedical Sciences", "Global Health"],
+        "level": ["graduate"]
+      },
+      "deadline": "2026-10-01",
+      "description": "Funding the next generation of global health leaders tackling the world's most pressing health challenges."
+    },
+    {
+      "id": "SCH-009",
+      "name": "Clean Energy Scholarship",
+      "provider": "Green Future Foundation",
+      "award": 14000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.3,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Environmental Science", "Chemical Engineering", "Electrical Engineering", "Mechanical Engineering", "Renewable Energy", "Sustainability"],
+        "level": ["undergraduate", "graduate"]
+      },
+      "deadline": "2026-09-20",
+      "description": "Supporting students committed to solving the global energy crisis through innovation."
+    },
+    {
+      "id": "SCH-010",
+      "name": "Business Innovation Grant",
+      "provider": "Entrepreneurship Council",
+      "award": 9000,
+      "currency": "USD",
+      "frequency": "annual",
+      "criteria": {
+        "minGpa": 3.1,
+        "gpaScale": 4.0,
+        "eligibleCountries": ["Any"],
+        "eligibleDegrees": ["Business Administration", "Economics", "Finance", "Marketing", "Entrepreneurship", "Management"],
+        "level": ["undergraduate", "graduate"]
+      },
+      "deadline": "2026-10-20",
+      "description": "Fueling entrepreneurial talent with funding to turn innovative business ideas into reality."
+    }
+  ]
+}
